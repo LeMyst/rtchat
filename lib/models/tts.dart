@@ -65,6 +65,7 @@ class TtsModel extends ChangeNotifier {
   var _isBotMuted = false;
   var _isEmoteMuted = false;
   var _isPreludeMuted = false;
+  var _isUnderscoreReplacementEnabled = true;
   var _isTtsCommandEncouraged = false;
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
@@ -185,8 +186,16 @@ class TtsModel extends ChangeNotifier {
       if (text.trim().isEmpty) {
         return "";
       }
-
-      final author = model.author.displayName ?? model.author.login;
+      var author = model.author.displayName ?? model.author.login;
+      if (_isUnderscoreReplacementEnabled) {
+        author = author
+            .replaceAll("_", " ")
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim();
+      }
+      if (!includeAuthorPrelude || isPreludeMuted) {
+        return text;
+      }
       return model.isAction
           ? l10n.actionMessage(author, text)
           : l10n.saidMessage(author, text);
@@ -382,6 +391,15 @@ class TtsModel extends ChangeNotifier {
 
   set isTtsCommandEncouraged(bool value) {
     _isTtsCommandEncouraged = value;
+    notifyListeners();
+  }
+
+  bool get isUnderscoreReplacementEnabled {
+    return _isUnderscoreReplacementEnabled;
+  }
+
+  set isUnderscoreReplacementEnabled(bool value) {
+    _isUnderscoreReplacementEnabled = value;
     notifyListeners();
   }
 
@@ -582,6 +600,9 @@ class TtsModel extends ChangeNotifier {
     if (json['isPreludeMuted'] != null) {
       _isPreludeMuted = json['isPreludeMuted'];
     }
+    if (json['isUnderscoreReplacementEnabled'] != null) {
+      _isUnderscoreReplacementEnabled = json['isUnderscoreReplacementEnabled'];
+    }
     if (json['isRandomVoiceEnabled'] != null) {
       _isRandomVoiceEnabled = json['isRandomVoiceEnabled'];
     }
@@ -608,6 +629,7 @@ class TtsModel extends ChangeNotifier {
         "isEmoteMuted": isEmoteMuted,
         "isTextSimplificationEnabled": isTextSimplificationEnabled,
         "isPreludeMuted": isPreludeMuted,
+        "isUnderscoreReplacementEnabled": isUnderscoreReplacementEnabled,
         "isTtsCommandEncouraged": isTtsCommandEncouraged,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
         "language": language.languageCode,
