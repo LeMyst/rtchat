@@ -54,6 +54,7 @@ class TtsModel extends ChangeNotifier {
   var _isBotMuted = false;
   var _isEmoteMuted = false;
   var _isPreludeMuted = false;
+  var _isUnderscoreReplacementEnabled = false;
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
   var _mode = TtsMode.disabled;
@@ -144,7 +145,13 @@ class TtsModel extends ChangeNotifier {
       if (text.trim().isEmpty) {
         return "";
       }
-      final author = model.author.displayName ?? model.author.login;
+      var author = model.author.displayName ?? model.author.login;
+      if (_isUnderscoreReplacementEnabled) {
+        author = author
+            .replaceAll("_", " ")
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim();
+      }
       if (!includeAuthorPrelude || isPreludeMuted) {
         return text;
       }
@@ -325,6 +332,15 @@ class TtsModel extends ChangeNotifier {
 
   set isPreludeMuted(bool value) {
     _isPreludeMuted = value;
+    notifyListeners();
+  }
+
+  bool get isUnderscoreReplacementEnabled {
+    return _isUnderscoreReplacementEnabled;
+  }
+
+  set isUnderscoreReplacementEnabled(bool value) {
+    _isUnderscoreReplacementEnabled = value;
     notifyListeners();
   }
 
@@ -509,6 +525,9 @@ class TtsModel extends ChangeNotifier {
     if (json['isPreludeMuted'] != null) {
       _isPreludeMuted = json['isPreludeMuted'];
     }
+    if (json['isUnderscoreReplacementEnabled'] != null) {
+      _isUnderscoreReplacementEnabled = json['isUnderscoreReplacementEnabled'];
+    }
     if (json['isRandomVoiceEnabled'] != null) {
       _isRandomVoiceEnabled = json['isRandomVoiceEnabled'];
     }
@@ -534,6 +553,7 @@ class TtsModel extends ChangeNotifier {
         "isBotMuted": isBotMuted,
         "isEmoteMuted": isEmoteMuted,
         "isPreludeMuted": isPreludeMuted,
+        "isUnderscoreReplacementEnabled": isUnderscoreReplacementEnabled,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
         "language": language.languageCode,
         "pitch": pitch,
