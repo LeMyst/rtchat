@@ -1,0 +1,51 @@
+name: Build Signed APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Decode keystore
+        env:
+          UPLOAD_KEYSTORE: ${{ secrets.UPLOAD_KEYSTORE }}
+        run: echo "$UPLOAD_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
+
+      - name: Build signed APK
+        env:
+          KEY_ALIAS: upload
+          KEY_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
+          STORE_FILE: ${{ runner.temp }}/upload-keystore.jks
+          STORE_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
+        run: flutter build apk --release
+
+      - name: Upload signed APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
