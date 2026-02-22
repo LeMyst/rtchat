@@ -55,6 +55,7 @@ class TtsModel extends ChangeNotifier {
   var _isEmoteMuted = false;
   var _isPreludeMuted = false;
   var _isUnderscoreReplacementEnabled = false;
+  var _isUnderscoreReplacementEnabled = true;
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
   var _mode = TtsMode.disabled;
