@@ -271,6 +271,13 @@ class TextToSpeechScreen extends StatelessWidget {
                 model.isSubscribersOnly = value;
               },
             ),
+            SwitchListTile.adaptive(
+              title: const Text("Only say messages starting with !v"),
+              value: model.isTtsCommandEncouraged,
+              onChanged: (value) {
+                model.isTtsCommandEncouraged = value;
+              },
+            ),
           ],
         );
       }),
