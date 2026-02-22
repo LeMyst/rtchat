@@ -265,6 +265,14 @@ class TextToSpeechScreen extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
+              title: const Text("Simplify messages"),
+              subtitle: const Text("Simplify punctuation, symbols, and whitespace (including muting repetitive punctuation and unsupported characters)"),
+              value: model.isTextSimplificationEnabled,
+              onChanged: (value) {
+                model.isTextSimplificationEnabled = value;
+              },
+            ),
+            SwitchListTile.adaptive(
               title: const Text("Subscribers only"),
               value: model.isSubscribersOnly,
               onChanged: (value) {

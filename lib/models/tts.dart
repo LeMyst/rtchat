@@ -35,6 +35,17 @@ import 'package:rtchat/models/user.dart';
 enum TtsMode { disabled, alertsOnly, enabled }
 
 class TtsModel extends ChangeNotifier {
+  static final _punctuation1 = RegExp(r'[\u0020-\u0026\u0028-\u002f]');
+  static final _punctuation2 = RegExp(r'[\u003a-\u0040]');
+  static final _punctuation3 = RegExp(r'[\u005b-\u0060]');
+  static final _punctuation4 = RegExp(r'[\u007b-\u007e]');
+  static final _punctuation5 = RegExp(r'[\u00a0-\u00bf]');
+  static final _diacritics = RegExp(r'[\u0300-\u036f]');
+  static final _repeatedChars = RegExp(r'(.)\1{2,}');
+  static final _boxDrawing = RegExp(r'[\u2500-\u257f]');
+  static final _braille = RegExp(r'[\u2800-\u28ff]');
+  static final _whitespace = RegExp(r'\s+');
+
   var _isCloudTtsEnabled = false;
   final _tts = FlutterTts()
     ..setSharedInstance(true)
@@ -64,6 +75,7 @@ class TtsModel extends ChangeNotifier {
   var _lastMessageTime = DateTime.now();
   MessageModel? _activeMessage;
   var _isSubscribersOnly = false;
+  var _isTextSimplificationEnabled = false;
 
   @override
   void dispose() {
@@ -148,13 +160,33 @@ class TtsModel extends ChangeNotifier {
         text = text.substring("!v".length).trim();
       }
 
-      if (text.trim().isEmpty) {
-        return "";
+      if (_isTextSimplificationEnabled) {
+        text = text.replaceAll(_punctuation1, ' '); // replace punctuation with space except for apostrophes
+        text = text.replaceAll(_punctuation2, ' '); // replace punctuation with space
+        text = text.replaceAll(_punctuation3, ' '); // replace punctuation with space
+        text = text.replaceAll(_punctuation4, ' '); // replace punctuation with space
+        text = text.replaceAll(_punctuation5, ' '); // replace punctuation with space
+        text = text.replaceAll(_diacritics, ''); // remove diacritics
+        text = text.replaceAllMapped(_repeatedChars, (match) {
+          // replace repeated characters with a single instance
+          return match.group(1)!;
+        });
+        text = text.replaceAll(_boxDrawing, ''); // remove box drawing characters
+        text = text.replaceAll(_braille, ''); // remove braille patterns
+
+        // Remove doubles spaces that may have been introduced and trim the text
+        text = text.replaceAll(_whitespace, ' ').trim();
       }
-      final author = model.author.displayName ?? model.author.login;
+
       if (!includeAuthorPrelude || isPreludeMuted) {
         return text;
       }
+
+      if (text.trim().isEmpty) {
+        return "";
+      }
+
+      final author = model.author.displayName ?? model.author.login;
       return model.isAction
           ? l10n.actionMessage(author, text)
           : l10n.saidMessage(author, text);
@@ -211,6 +243,15 @@ class TtsModel extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
+  }
+
+  bool get isTextSimplificationEnabled {
+    return _isTextSimplificationEnabled;
+  }
+
+  set isTextSimplificationEnabled(bool value) {
+    _isTextSimplificationEnabled = value;
+    notifyListeners();
   }
 
   set newTtsEnabled(bool value) {
@@ -526,6 +567,9 @@ class TtsModel extends ChangeNotifier {
     if (json['isTtsCommandEncouraged'] != null) {
       _isTtsCommandEncouraged = json['isTtsCommandEncouraged'];
     }
+    if (json['isTextSimplificationEnabled'] != null) {
+      _isTextSimplificationEnabled = json['isTextSimplificationEnabled'];
+    }
     if (json['pitch'] != null) {
       _pitch = json['pitch'];
     }
@@ -562,6 +606,7 @@ class TtsModel extends ChangeNotifier {
   Map<String, dynamic> toJson() => {
         "isBotMuted": isBotMuted,
         "isEmoteMuted": isEmoteMuted,
+        "isTextSimplificationEnabled": isTextSimplificationEnabled,
         "isPreludeMuted": isPreludeMuted,
         "isTtsCommandEncouraged": isTtsCommandEncouraged,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
