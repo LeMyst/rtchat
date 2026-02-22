@@ -265,6 +265,14 @@ class TwitchMessageModel extends MessageModel {
     return tags['badges']['moderator'] != null;
   }
 
+  bool get isSubscriber {
+    final badgesRaw = tags['badges-raw'] as String?;
+    if (badgesRaw == null || badgesRaw.isEmpty) {
+      return false;
+    }
+    return badgesRaw.contains('subscriber/');
+  }
+
   List<MessageToken> get tokenized => _tokenized ??= tokenize();
   List<MessageToken>? _tokenized;
   List<MessageToken> tokenize() {
