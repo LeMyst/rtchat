@@ -34,7 +34,7 @@ jobs:
       - name: Decode keystore
         env:
           UPLOAD_KEYSTORE: ${{ secrets.UPLOAD_KEYSTORE }}
-        run: echo "$UPLOAD_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
+        run: printf '%s' "$UPLOAD_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
 
       - name: Build signed APK
         env:
