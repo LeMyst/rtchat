@@ -31,12 +31,21 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # Build debug APK for external PRs (forks)
+      - name: Build Debug APK
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        run: flutter build apk --debug
+
+      # Decode keystore: Runs on push, dispatch, OR internal PRs
       - name: Decode keystore
+        if: github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         env:
           UPLOAD_KEYSTORE: ${{ secrets.UPLOAD_KEYSTORE }}
         run: printf '%s' "$UPLOAD_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
 
+      # Build signed APK: Runs on push, dispatch, OR internal PRs
       - name: Build signed APK
+        if: github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         env:
           KEY_ALIAS: upload
           KEY_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
@@ -44,7 +53,15 @@ jobs:
           STORE_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
         run: flutter build apk --release
 
+      - name: Upload Debug APK
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+
       - name: Upload signed APK
+        if: github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         uses: actions/upload-artifact@v4
         with:
           name: signed-apk
