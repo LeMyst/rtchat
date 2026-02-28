@@ -54,6 +54,7 @@ class TtsModel extends ChangeNotifier {
   var _isBotMuted = false;
   var _isEmoteMuted = false;
   var _isPreludeMuted = false;
+  var _isTtsCommandEncouraged = false;
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
   var _mode = TtsMode.disabled;
@@ -124,7 +125,7 @@ class TtsModel extends ChangeNotifier {
   String getVocalization(AppLocalizations l10n, MessageModel model,
       {bool includeAuthorPrelude = false}) {
     if (model is TwitchMessageModel) {
-      final text = model.tokenized
+      var text = model.tokenized
           .where((token) =>
               token is TextToken ||
               (!_isEmoteMuted && token is EmoteToken) ||
@@ -141,6 +142,12 @@ class TtsModel extends ChangeNotifier {
           return token.url.host;
         }
       }).join("");
+
+      if (text.toLowerCase().startsWith("!v ")) {
+        debugPrint("Message starts with TTS command prefix: $text");
+        text = text.substring("!v".length).trim();
+      }
+
       if (text.trim().isEmpty) {
         return "";
       }
@@ -328,6 +335,15 @@ class TtsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get isTtsCommandEncouraged {
+    return _isTtsCommandEncouraged;
+  }
+
+  set isTtsCommandEncouraged(bool value) {
+    _isTtsCommandEncouraged = value;
+    notifyListeners();
+  }
+
   bool get isCloudTtsEnabled {
     return _isCloudTtsEnabled;
   }
@@ -388,13 +404,23 @@ class TtsModel extends ChangeNotifier {
         return;
       }
 
+      if (_isTtsCommandEncouraged &&
+          !model.message.toLowerCase().startsWith("!v ")) {
+        debugPrint("Message does not start with TTS command prefix: ${model.message}");
+        return;
+      }
+
       if (_mutedUsers.any((user) =>
           user.displayName?.toLowerCase() ==
           model.author.displayName?.toLowerCase())) {
         return;
       }
 
-      if ((_isBotMuted && model.author.isBot) || model.isCommand) {
+      if (_isBotMuted && model.author.isBot) {
+        return;
+      }
+
+      if(model.isCommand && !model.message.toLowerCase().startsWith("!v")) {
         return;
       }
     }
@@ -497,6 +523,9 @@ class TtsModel extends ChangeNotifier {
     if (json['isBotMuted'] != null) {
       _isBotMuted = json['isBotMuted'];
     }
+    if (json['isTtsCommandEncouraged'] != null) {
+      _isTtsCommandEncouraged = json['isTtsCommandEncouraged'];
+    }
     if (json['pitch'] != null) {
       _pitch = json['pitch'];
     }
@@ -534,6 +563,7 @@ class TtsModel extends ChangeNotifier {
         "isBotMuted": isBotMuted,
         "isEmoteMuted": isEmoteMuted,
         "isPreludeMuted": isPreludeMuted,
+        "isTtsCommandEncouraged": isTtsCommandEncouraged,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
         "language": language.languageCode,
         "pitch": pitch,
