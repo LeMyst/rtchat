@@ -384,7 +384,7 @@ class TtsModel extends ChangeNotifier {
     }
 
     if (model is TwitchMessageModel) {
-      if (_isSubscribersOnly && (model.tags['badges']?['subscriber'] == null)) {
+      if (_isSubscribersOnly && !model.isSubscriber) {
         return;
       }
 
