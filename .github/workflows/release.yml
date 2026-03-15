@@ -1,0 +1,90 @@
+name: Release APK
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate tag format
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "::error::Tag '$TAG' does not match expected format vX.Y.Z (e.g. v1.0.0, v1.2.3-beta.1)"
+            exit 1
+          fi
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Decode keystore
+        env:
+          UPLOAD_KEYSTORE: ${{ secrets.UPLOAD_KEYSTORE }}
+        run: printf '%s' "$UPLOAD_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
+
+      - name: Build signed APK
+        env:
+          KEY_ALIAS: upload
+          KEY_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
+          STORE_FILE: ${{ runner.temp }}/upload-keystore.jks
+          STORE_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
+        run: flutter build apk --release --build-name="${{ env.VERSION }}"
+
+      - name: Rename APK
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/rtchat-${{ env.TAG }}.apk
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          # Find the previous tag
+          PREVIOUS_TAG=$(git tag --sort=-creatordate | grep -E '^v[0-9]' | sed -n '2p')
+          # Escape for GitHub Actions multiline output
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "notes<<$EOF" >> "$GITHUB_OUTPUT"
+            echo "Initial release 🎉" >> "$GITHUB_OUTPUT"
+            echo "$EOF" >> "$GITHUB_OUTPUT"
+          else
+            NOTES=$(git log --pretty=format:"- %s (%h)" "$PREVIOUS_TAG"..HEAD -- ':!.github')
+            echo "notes<<$EOF" >> "$GITHUB_OUTPUT"
+            echo "## What's Changed" >> "$GITHUB_OUTPUT"
+            echo "" >> "$GITHUB_OUTPUT"
+            echo "$NOTES" >> "$GITHUB_OUTPUT"
+            echo "" >> "$GITHUB_OUTPUT"
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${{ env.TAG }}" >> "$GITHUB_OUTPUT"
+            echo "$EOF" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: ${{ env.TAG }}
+          body: ${{ steps.release_notes.outputs.notes }}
+          draft: true
+          prerelease: ${{ contains(env.TAG, '-') }}
+          files: build/app/outputs/flutter-apk/rtchat-${{ env.TAG }}.apk
