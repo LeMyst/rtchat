@@ -711,4 +711,20 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get alertsEnabled => 'Alerts only';
+
+  @override
+  String get mutedUsers => 'Utilisateurs en sourdine';
+
+  @override
+  String get mutedUsersSubtitle => 'Gérer les utilisateurs en sourdine';
+
+  @override
+  String get noMutedUsers => 'Aucun utilisateur en sourdine';
+
+  @override
+  String get mutedUsersDescription =>
+      'Les messages des utilisateurs en sourdine sont grisés dans le chat et ignorés par la synthèse vocale.';
+
+  @override
+  String get unmute => 'Rétablir';
 }

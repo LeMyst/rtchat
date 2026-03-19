@@ -54,6 +54,13 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
+            title: Text(AppLocalizations.of(context)!.mutedUsers),
+            subtitle: Text(AppLocalizations.of(context)!.mutedUsersSubtitle),
+            onTap: () {
+              Navigator.pushNamed(context, "/settings/muted-users");
+            },
+          ),
+          ListTile(
             title: Text(AppLocalizations.of(context)!.textToSpeech),
             subtitle: Text(AppLocalizations.of(context)!.textToSpeechSubtitle),
             onTap: () {

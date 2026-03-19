@@ -992,5 +992,25 @@
   "alertsEnabled" : "Alerts only",
   "@alertsEnabled" : {
       "description": "Message indicating that alerts have been enabled"
+  },
+  "mutedUsers": "Muted users",
+  "@mutedUsers": {
+    "description": "Title for the muted users settings page"
+  },
+  "mutedUsersSubtitle": "Manage muted users",
+  "@mutedUsersSubtitle": {
+    "description": "Subtitle for the muted users settings entry"
+  },
+  "noMutedUsers": "No muted users",
+  "@noMutedUsers": {
+    "description": "Empty state when there are no muted users"
+  },
+  "mutedUsersDescription": "Muted users have their messages grayed out in the chat and silenced from text-to-speech.",
+  "@mutedUsersDescription": {
+    "description": "Description of what muting a user does"
+  },
+  "unmute": "Unmute",
+  "@unmute": {
+    "description": "Button label to unmute a user"
   }
 }

@@ -10,6 +10,7 @@ import 'package:rtchat/models/messages/tokens.dart';
 import 'package:rtchat/models/messages/twitch/message.dart';
 import 'package:rtchat/models/messages/twitch/user.dart';
 import 'package:rtchat/models/style.dart';
+import 'package:rtchat/models/tts.dart';
 import 'package:rtchat/models/user.dart';
 import 'package:rtchat/urls.dart';
 
@@ -245,8 +246,11 @@ class TwitchMessageWidget extends StatelessWidget {
           ? model.tokenized
           : model.tokenized.compacted;
 
-      return Opacity(
-        opacity: model.deleted ? 0.6 : 1.0,
+      return Selector<TtsModel, bool>(
+        selector: (_, ttsModel) => ttsModel.isMuted(model.author),
+        builder: (context, isMuted, child) {
+        return Opacity(
+        opacity: model.deleted ? 0.6 : (isMuted ? 0.35 : 1.0),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Column(
@@ -294,6 +298,7 @@ class TwitchMessageWidget extends StatelessWidget {
           ),
         ),
       );
+      });
     });
   }
 }

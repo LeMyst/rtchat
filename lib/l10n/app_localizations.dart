@@ -1115,6 +1115,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Alerts only'**
   String get alertsEnabled;
+
+  /// Title for the muted users settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Muted users'**
+  String get mutedUsers;
+
+  /// Subtitle for the muted users settings entry
+  ///
+  /// In en, this message translates to:
+  /// **'Manage muted users'**
+  String get mutedUsersSubtitle;
+
+  /// Empty state when there are no muted users
+  ///
+  /// In en, this message translates to:
+  /// **'No muted users'**
+  String get noMutedUsers;
+
+  /// Description of what muting a user does
+  ///
+  /// In en, this message translates to:
+  /// **'Muted users have their messages grayed out in the chat and silenced from text-to-speech.'**
+  String get mutedUsersDescription;
+
+  /// Button label to unmute a user
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
 }
 
 class _AppLocalizationsDelegate

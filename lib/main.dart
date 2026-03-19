@@ -34,6 +34,7 @@ import 'package:rtchat/screens/settings/activity_feed.dart';
 import 'package:rtchat/screens/settings/audio_sources.dart';
 import 'package:rtchat/screens/settings/backup.dart';
 import 'package:rtchat/screens/settings/chat_history.dart';
+import 'package:rtchat/screens/settings/muted_users.dart';
 import 'package:rtchat/screens/settings/events.dart';
 import 'package:rtchat/screens/settings/events/channel_point.dart';
 import 'package:rtchat/screens/settings/events/cheer.dart';
@@ -334,6 +335,7 @@ class _AppState extends State<App> {
             '/settings/activity-feed': (context) => const ActivityFeedScreen(),
             '/settings/audio-sources': (context) => const AudioSourcesScreen(),
             '/settings/chat-history': (context) => const ChatHistoryScreen(),
+            '/settings/muted-users': (context) => const MutedUsersScreen(),
             '/settings/text-to-speech': (context) => const TextToSpeechScreen(),
             '/settings/text-to-speech/cloud-tts': (context) =>
                 const CloudTtsPurchasesScreen(),
