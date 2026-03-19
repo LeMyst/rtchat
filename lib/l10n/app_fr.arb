@@ -161,5 +161,10 @@
   "actionMessage": "{author} {text}",
   "saidMessage": "{author} a dit: {text}",
   "textToSpeechEnabled": "Synthèse vocale activée",
-  "textToSpeechDisabled": "Synthèse vocale désactivée"
+  "textToSpeechDisabled": "Synthèse vocale désactivée",
+  "mutedUsers": "Utilisateurs en sourdine",
+  "mutedUsersSubtitle": "Gérer les utilisateurs en sourdine",
+  "noMutedUsers": "Aucun utilisateur en sourdine",
+  "mutedUsersDescription": "Les messages des utilisateurs en sourdine sont grisés dans le chat et ignorés par la synthèse vocale.",
+  "unmute": "Rétablir"
 }

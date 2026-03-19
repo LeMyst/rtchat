@@ -433,6 +433,8 @@ class TtsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Set<TwitchUserModel> get mutedUsers => Set.unmodifiable(_mutedUsers);
+
   bool isMuted(TwitchUserModel user) {
     return _mutedUsers.contains(user);
   }

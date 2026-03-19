@@ -79,7 +79,80 @@ class ChatHistoryMessage extends StatelessWidget {
         final channel = Channel("twitch", viewingChannelId, "");
 
         if (loginChannelId != viewingChannelId) {
-          return child;
+          return Material(
+            child: InkWell(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              onLongPress: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
+                await showDialog<void>(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: ListView(
+                            shrinkWrap: true,
+                            primary: false,
+                            children: [
+                              ListTile(
+                                  leading: const Icon(Icons.timer,
+                                      color: Colors.grey),
+                                  title: Text(formattedTimestamp)),
+                              Selector<TtsModel, bool>(
+                                  selector: (_, ttsModel) => ttsModel.isMuted(m.author),
+                                  builder: (context, isMuted, child) {
+                                final ttsModel = Provider.of<TtsModel>(context, listen: false);
+                                if (isMuted) {
+                                  return ListTile(
+                                      leading: const Icon(
+                                          Icons.volume_up_rounded,
+                                          color: Colors.deepPurpleAccent),
+                                      title: Text(AppLocalizations.of(context)!
+                                          .unmuteUser(m.author.displayName ??
+                                              m.author.login)),
+                                      onTap: () {
+                                        ttsModel.unmute(m.author);
+                                        Navigator.pop(context);
+                                      });
+                                }
+                                return ListTile(
+                                    leading: const Icon(
+                                        Icons.volume_off_rounded,
+                                        color: Colors.redAccent),
+                                    title: Text(AppLocalizations.of(context)!
+                                        .muteUser(m.author.displayName ??
+                                            m.author.login)),
+                                    onTap: () {
+                                      ttsModel.mute(m.author);
+                                      Navigator.pop(context);
+                                    });
+                              }),
+                              ListTile(
+                                  leading: const Icon(Icons.copy_outlined,
+                                      color: Colors.greenAccent),
+                                  title: Text(AppLocalizations.of(context)!
+                                      .copyMessage),
+                                  onTap: () {
+                                    Clipboard.setData(
+                                        ClipboardData(text: m.message));
+                                    Navigator.pop(context);
+                                  }),
+                              ListTile(
+                                  leading: const Icon(Icons.link_outlined,
+                                      color: Colors.blueAccent),
+                                  title: Text(AppLocalizations.of(context)!
+                                      .viewProfile(m.author.displayName ??
+                                          m.author.login)),
+                                  onTap: () {
+                                    openUrl(Uri.https(
+                                        'www.twitch.tv', '/${m.author.login}'));
+                                    Navigator.pop(context);
+                                  }),
+                            ]),
+                      );
+                    });
+              },
+              child: child,
+            ),
+          );
         }
 
         return Material(
@@ -100,9 +173,11 @@ class ChatHistoryMessage extends StatelessWidget {
                                   leading: const Icon(Icons.timer,
                                       color: Colors.grey),
                                   title: Text(formattedTimestamp)),
-                              Consumer<TtsModel>(
-                                  builder: (context, ttsModel, child) {
-                                if (ttsModel.isMuted(m.author)) {
+                              Selector<TtsModel, bool>(
+                                  selector: (_, ttsModel) => ttsModel.isMuted(m.author),
+                                  builder: (context, isMuted, child) {
+                                final ttsModel = Provider.of<TtsModel>(context, listen: false);
+                                if (isMuted) {
                                   return ListTile(
                                       leading: const Icon(
                                           Icons.volume_up_rounded,
@@ -186,8 +261,8 @@ class ChatHistoryMessage extends StatelessWidget {
                                       .viewProfile(m.author.displayName ??
                                           m.author.login)),
                                   onTap: () {
-                                    openUrl(Uri.parse(
-                                        "https://www.twitch.tv/${m.author.displayName}"));
+                                    openUrl(Uri.https(
+                                        'www.twitch.tv', '/${m.author.login}'));
                                     Navigator.pop(context);
                                   }),
                             ]),

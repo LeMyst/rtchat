@@ -687,6 +687,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get alertsEnabled => 'Alerts only';
+
+  @override
+  String get mutedUsers => 'Muted users';
+
+  @override
+  String get mutedUsersSubtitle => 'Manage muted users';
+
+  @override
+  String get noMutedUsers => 'No muted users';
+
+  @override
+  String get mutedUsersDescription =>
+      'Muted users have their messages grayed out in the chat and silenced from text-to-speech.';
+
+  @override
+  String get unmute => 'Unmute';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
