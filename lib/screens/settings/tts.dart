@@ -265,6 +265,13 @@ class TextToSpeechScreen extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
+              title: const Text("Replace underscores with spaces in viewer names"),
+              value: model.isUnderscoreReplacementEnabled,
+              onChanged: (value) {
+                model.isUnderscoreReplacementEnabled = value;
+              },
+            ),
+            SwitchListTile.adaptive(
               title: const Text("Simplify messages"),
               subtitle: const Text("Simplify punctuation, symbols, and whitespace (including muting repetitive punctuation and unsupported characters)"),
               value: model.isTextSimplificationEnabled,
