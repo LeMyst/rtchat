@@ -71,6 +71,7 @@ class TtsModel extends ChangeNotifier {
   var _isSupportedLanguage = false;
   var _isRandomVoiceEnabled = true;
   var _isBotMuted = false;
+  var _isReplyMuted = false;
   var _isEmoteMuted = false;
   var _isPreludeMuted = false;
   var _isUnderscoreReplacementEnabled = true;
@@ -379,6 +380,15 @@ class TtsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get isReplyMuted {
+    return _isReplyMuted;
+  }
+
+  set isReplyMuted(bool value) {
+    _isReplyMuted = value;
+    notifyListeners();
+  }
+
   bool get isEmoteMuted {
     return _isEmoteMuted;
   }
@@ -493,6 +503,10 @@ class TtsModel extends ChangeNotifier {
         return;
       }
 
+      if (_isReplyMuted && model.reply != null) {
+        return;
+      }
+
       if(model.isCommand && !model.message.toLowerCase().startsWith("!v")) {
         return;
       }
@@ -596,6 +610,9 @@ class TtsModel extends ChangeNotifier {
     if (json['isBotMuted'] != null) {
       _isBotMuted = json['isBotMuted'];
     }
+    if (json['isReplyMuted'] != null) {
+      _isReplyMuted = json['isReplyMuted'];
+    }
     if (json['isTtsCommandEncouraged'] != null) {
       _isTtsCommandEncouraged = json['isTtsCommandEncouraged'];
     }
@@ -640,6 +657,7 @@ class TtsModel extends ChangeNotifier {
 
   Map<String, dynamic> toJson() => {
         "isBotMuted": isBotMuted,
+        "isReplyMuted": isReplyMuted,
         "isEmoteMuted": isEmoteMuted,
         "isTextSimplificationEnabled": isTextSimplificationEnabled,
         "isPreludeMuted": isPreludeMuted,
