@@ -103,6 +103,9 @@ Future<void> isolateMain(
                 if (ttsModel.isBotMuted && messageModel.author.isBot) {
                   return; // Skip vocalization for bot messages
                 }
+                if (ttsModel.isReplyMuted && messageModel.reply != null) {
+                  return; // Skip vocalization for reply messages
+                }
                 final finalMessage = ttsModel.getVocalization(
                   localizations,
                   messageModel,
