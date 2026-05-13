@@ -251,6 +251,13 @@ class TextToSpeechScreen extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
+              title: const Text('Mute text to speech for replies'),
+              value: model.isReplyMuted,
+              onChanged: (value) {
+                model.isReplyMuted = value;
+              },
+            ),
+            SwitchListTile.adaptive(
               title: const Text('Mute all emotes in text to speech'),
               value: model.isEmoteMuted,
               onChanged: (value) {
