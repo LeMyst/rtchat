@@ -113,11 +113,11 @@ class MainActivity : FlutterActivity() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                         !Settings.canDrawOverlays(this)
                     ) {
-                        startActivityForResult(
+                        startActivity(
                             Intent(
                                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                 Uri.parse("package:$packageName")
-                            ), 8675309
+                            )
                         )
                     }
                     result.success(

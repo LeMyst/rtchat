@@ -156,11 +156,11 @@ class AudioService : Service() {
                 nm.createNotificationChannel(mChannel)
             }
             startForeground(NOTIFICATION_ID, notification.build())
-            wakelock?.acquire()
+            wakelock?.acquire(10 * 60 * 1000L) // 10 minutes max
             START_STICKY
         } else {
             // ensure the notification is removed
-            stopForeground(true)
+            stopForeground(STOP_FOREGROUND_REMOVE)
             nm.cancel(NOTIFICATION_ID)
             stopSelf()
             if(wakelock?.isHeld() == true) {
