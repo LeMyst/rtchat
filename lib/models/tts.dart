@@ -73,6 +73,7 @@ class TtsModel extends ChangeNotifier {
   var _isBotMuted = false;
   var _isReplyMuted = false;
   var _isEmoteMuted = false;
+  var _isKappaEnabled = false;
   var _isPreludeMuted = false;
   var _isUnderscoreReplacementEnabled = true;
   var _isTtsCommandEncouraged = false;
@@ -151,6 +152,7 @@ class TtsModel extends ChangeNotifier {
           .where((token) =>
               token is TextToken ||
               (!_isEmoteMuted && token is EmoteToken) ||
+              (_isEmoteMuted && _isKappaEnabled && token is EmoteToken && (token.code.startsWith('Kappa'))) ||
               token is UserMentionToken ||
               token is LinkToken)
           .map((token) {
@@ -398,6 +400,15 @@ class TtsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get isKappaEnabled {
+    return _isKappaEnabled;
+  }
+
+  set isKappaEnabled(bool value) {
+    _isKappaEnabled = value;
+    notifyListeners();
+  }
+
   bool get isPreludeMuted {
     return _isPreludeMuted;
   }
@@ -628,6 +639,9 @@ class TtsModel extends ChangeNotifier {
     if (json['isEmoteMuted'] != null) {
       _isEmoteMuted = json['isEmoteMuted'];
     }
+    if (json['isKappaEnabled'] != null) {
+      _isKappaEnabled = json['isKappaEnabled'];
+    }
     if (json['isPreludeMuted'] != null) {
       _isPreludeMuted = json['isPreludeMuted'];
     }
@@ -659,6 +673,7 @@ class TtsModel extends ChangeNotifier {
         "isBotMuted": isBotMuted,
         "isReplyMuted": isReplyMuted,
         "isEmoteMuted": isEmoteMuted,
+        "isKappaEnabled": isKappaEnabled,
         "isTextSimplificationEnabled": isTextSimplificationEnabled,
         "isPreludeMuted": isPreludeMuted,
         "isUnderscoreReplacementEnabled": isUnderscoreReplacementEnabled,

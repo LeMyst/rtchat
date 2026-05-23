@@ -265,6 +265,16 @@ class TextToSpeechScreen extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
+              title: const Text('Keep Kappa emotes when emotes are muted'),
+              subtitle: const Text('Emotes named "Kappa" or starting with "Kappa" will still be read aloud'),
+              value: model.isKappaEnabled,
+              onChanged: model.isEmoteMuted
+                  ? (value) {
+                      model.isKappaEnabled = value;
+                    }
+                  : null,
+            ),
+            SwitchListTile.adaptive(
               title: const Text("Mute viewer names in text to speech"),
               value: model.isPreludeMuted,
               onChanged: (value) {
