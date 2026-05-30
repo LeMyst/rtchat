@@ -159,6 +159,7 @@ class TtsModel extends ChangeNotifier {
         if (token is TextToken) {
           return token.text;
         } else if (token is EmoteToken) {
+          if (token.code.startsWith('Kappa')) return 'Kappa';
           return token.code;
         } else if (token is UserMentionToken) {
           return token.username.replaceAll("_", " ");
