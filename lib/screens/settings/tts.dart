@@ -264,14 +264,20 @@ class TextToSpeechScreen extends StatelessWidget {
                 model.isEmoteMuted = value;
               },
             ),
-            SwitchListTile.adaptive(
-              title: const Text('Keep Kappa emotes when emotes are muted'),
-              subtitle: const Text('Emotes named "Kappa" or starting with "Kappa" will still be read aloud'),
-              value: model.isKappaEnabled,
-              onChanged: model.isEmoteMuted
-                  ? (value) {
-                      model.isKappaEnabled = value;
-                    }
+            ListTile(
+              enabled: model.isEmoteMuted,
+              title: const Text('Allowed emotes'),
+              subtitle: Text(
+                model.isEmoteMuted
+                    ? (model.allowedEmotes.isEmpty
+                        ? 'Allow specific emotes (e.g. "Kappa*") to still be read aloud'
+                        : '${model.allowedEmotes.length} allowed emote${model.allowedEmotes.length == 1 ? "" : "s"}')
+                    : 'Enable "Mute all emotes" to allow exceptions',
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: model.isEmoteMuted
+                  ? () => Navigator.pushNamed(
+                      context, '/settings/text-to-speech/allowed-emotes')
                   : null,
             ),
             SwitchListTile.adaptive(
