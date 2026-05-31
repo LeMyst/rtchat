@@ -50,6 +50,7 @@ import 'package:rtchat/screens/settings/quick_links.dart';
 import 'package:rtchat/screens/settings/settings.dart';
 import 'package:rtchat/screens/settings/third_party.dart';
 import 'package:rtchat/screens/settings/tts.dart';
+import 'package:rtchat/screens/settings/tts/allowed_emotes.dart';
 import 'package:rtchat/screens/settings/tts/cloud_tts_purchases.dart';
 import 'package:rtchat/screens/settings/tts/languages.dart';
 import 'package:rtchat/screens/settings/tts/voices.dart';
@@ -343,6 +344,8 @@ class _AppState extends State<App> {
                 const LanguagesScreen(),
             '/settings/text-to-speech/voices': (context) =>
                 const VoicesScreen(),
+            '/settings/text-to-speech/allowed-emotes': (context) =>
+                const AllowedEmotesScreen(),
             '/settings/quick-links': (context) => const QuickLinksScreen(),
             '/settings/backup': (context) => const BackupScreen(),
             '/settings/third-party': (context) => const ThirdPartyScreen(),

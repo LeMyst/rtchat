@@ -28,6 +28,7 @@ import 'package:rtchat/models/messages/twitch/subscription_event.dart';
 import 'package:rtchat/models/messages/twitch/subscription_gift_event.dart';
 import 'package:rtchat/models/messages/twitch/subscription_message_event.dart';
 import 'package:rtchat/models/messages/twitch/user.dart';
+import 'package:rtchat/models/tts/allowed_emote.dart';
 import 'package:rtchat/models/tts/bytes_audio_source.dart';
 import 'package:rtchat/models/tts/language.dart';
 import 'package:rtchat/models/user.dart';
@@ -73,7 +74,7 @@ class TtsModel extends ChangeNotifier {
   var _isBotMuted = false;
   var _isReplyMuted = false;
   var _isEmoteMuted = false;
-  var _isKappaEnabled = false;
+  var _allowedEmotes = <TtsAllowedEmote>[];
   var _isPreludeMuted = false;
   var _isUnderscoreReplacementEnabled = true;
   var _isTtsCommandEncouraged = false;
@@ -149,23 +150,20 @@ class TtsModel extends ChangeNotifier {
       {bool includeAuthorPrelude = false}) {
     if (model is TwitchMessageModel) {
       var text = model.tokenized
-          .where((token) =>
-              token is TextToken ||
-              (!_isEmoteMuted && token is EmoteToken) ||
-              (_isEmoteMuted && _isKappaEnabled && token is EmoteToken && (token.code.startsWith('Kappa'))) ||
-              token is UserMentionToken ||
-              token is LinkToken)
-          .map((token) {
-        if (token is TextToken) {
-          return token.text;
-        } else if (token is EmoteToken) {
-          return token.code;
-        } else if (token is UserMentionToken) {
-          return token.username.replaceAll("_", " ");
-        } else if (token is LinkToken) {
-          return token.url.host;
-        }
-      }).join("");
+          .map<String?>((token) {
+            if (token is TextToken) {
+              return token.text;
+            } else if (token is EmoteToken) {
+              return _vocalizeEmote(token);
+            } else if (token is UserMentionToken) {
+              return token.username.replaceAll("_", " ");
+            } else if (token is LinkToken) {
+              return token.url.host;
+            }
+            return null;
+          })
+          .whereType<String>()
+          .join("");
 
       if (_isEmoteMuted) {
         text = text.replaceAll(_emojis, '').replaceAll(_whitespace, ' ').trim();
@@ -252,6 +250,22 @@ class TtsModel extends ChangeNotifier {
     } else if (model is TwitchShoutoutCreateEventModel) {
     } else if (model is TwitchShoutoutReceiveEventModel) {}
     return "";
+  }
+
+  /// Returns the text to speak for [token], or null if the emote should be
+  /// dropped. When emotes aren't muted every emote is spoken by its code.
+  /// When they are muted, only emotes matching an allowed rule survive, using
+  /// the rule's replacement when one is configured.
+  String? _vocalizeEmote(EmoteToken token) {
+    if (!_isEmoteMuted) {
+      return token.code;
+    }
+    for (final rule in _allowedEmotes) {
+      if (rule.matches(token.code)) {
+        return rule.vocalizationFor(token.code);
+      }
+    }
+    return null;
   }
 
   bool get newTtsEnabled {
@@ -400,12 +414,28 @@ class TtsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isKappaEnabled {
-    return _isKappaEnabled;
+  /// The emote rules that survive "mute all emotes". Only consulted while
+  /// [isEmoteMuted] is true.
+  List<TtsAllowedEmote> get allowedEmotes => List.unmodifiable(_allowedEmotes);
+
+  void addAllowedEmote(TtsAllowedEmote emote) {
+    _allowedEmotes.add(emote);
+    notifyListeners();
   }
 
-  set isKappaEnabled(bool value) {
-    _isKappaEnabled = value;
+  void updateAllowedEmote(int index, TtsAllowedEmote emote) {
+    if (index < 0 || index >= _allowedEmotes.length) {
+      return;
+    }
+    _allowedEmotes[index] = emote;
+    notifyListeners();
+  }
+
+  void removeAllowedEmoteAt(int index) {
+    if (index < 0 || index >= _allowedEmotes.length) {
+      return;
+    }
+    _allowedEmotes.removeAt(index);
     notifyListeners();
   }
 
@@ -639,8 +669,14 @@ class TtsModel extends ChangeNotifier {
     if (json['isEmoteMuted'] != null) {
       _isEmoteMuted = json['isEmoteMuted'];
     }
-    if (json['isKappaEnabled'] != null) {
-      _isKappaEnabled = json['isKappaEnabled'];
+    if (json['allowedEmotes'] != null) {
+      _allowedEmotes = (json['allowedEmotes'] as List)
+          .map((e) => TtsAllowedEmote.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+    } else if (json['isKappaEnabled'] == true && _allowedEmotes.isEmpty) {
+      // Migrate the legacy single "Kappa" toggle, which read aloud any emote
+      // whose code started with "Kappa", into an equivalent wildcard rule.
+      _allowedEmotes = [TtsAllowedEmote(pattern: 'Kappa*')];
     }
     if (json['isPreludeMuted'] != null) {
       _isPreludeMuted = json['isPreludeMuted'];
@@ -673,7 +709,7 @@ class TtsModel extends ChangeNotifier {
         "isBotMuted": isBotMuted,
         "isReplyMuted": isReplyMuted,
         "isEmoteMuted": isEmoteMuted,
-        "isKappaEnabled": isKappaEnabled,
+        "allowedEmotes": _allowedEmotes.map((e) => e.toJson()).toList(),
         "isTextSimplificationEnabled": isTextSimplificationEnabled,
         "isPreludeMuted": isPreludeMuted,
         "isUnderscoreReplacementEnabled": isUnderscoreReplacementEnabled,
