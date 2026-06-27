@@ -1145,6 +1145,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unmute'**
   String get unmute;
+
+  /// Button label to play a sample TTS message
+  ///
+  /// In en, this message translates to:
+  /// **'Play sample message'**
+  String get ttsPlaySampleMessage;
+
+  /// Section header for the TTS rate slider
+  ///
+  /// In en, this message translates to:
+  /// **'Text to Speech Rate'**
+  String get ttsRate;
+
+  /// Section header for the TTS pitch slider
+  ///
+  /// In en, this message translates to:
+  /// **'Text to Speech Pitch'**
+  String get ttsPitch;
+
+  /// Toggle label to mute TTS for bot messages
+  ///
+  /// In en, this message translates to:
+  /// **'Mute text to speech for bots'**
+  String get ttsMuteBots;
+
+  /// Toggle label to mute TTS for reply messages
+  ///
+  /// In en, this message translates to:
+  /// **'Mute text to speech for replies'**
+  String get ttsMuteReplies;
+
+  /// Toggle label to mute all emotes in TTS
+  ///
+  /// In en, this message translates to:
+  /// **'Mute all emotes in text to speech'**
+  String get ttsMuteEmotes;
+
+  /// Title for the allowed emotes list tile
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed emotes'**
+  String get ttsAllowedEmotes;
+
+  /// Subtitle when the allowed emotes list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Allow specific emotes (e.g. \"Kappa*\") to still be read aloud'**
+  String get ttsAllowedEmotesHint;
+
+  /// Subtitle showing how many emotes are currently allowed
+  ///
+  /// In en, this message translates to:
+  /// **'{count,plural, =1{1 allowed emote} other{{count} allowed emotes}}'**
+  String ttsAllowedEmotesCount(num count);
+
+  /// Subtitle for the allowed emotes tile when mute emotes is off
+  ///
+  /// In en, this message translates to:
+  /// **'Enable \"Mute all emotes\" to allow exceptions'**
+  String get ttsAllowedEmotesMuteDisabledHint;
+
+  /// Title for the repeated emoji limit setting
+  ///
+  /// In en, this message translates to:
+  /// **'Limit repeated emojis'**
+  String get ttsLimitRepeatedEmojis;
+
+  /// Subtitle for the repeated emoji limit setting
+  ///
+  /// In en, this message translates to:
+  /// **'Stop TTS from reading the same emoji or emote more than a set number of times per message'**
+  String get ttsLimitRepeatedEmojisSubtitle;
+
+  /// Dropdown option to disable a TTS feature
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get ttsOptionOff;
+
+  /// Dropdown option for the maximum number of repeated emojis or emotes
+  ///
+  /// In en, this message translates to:
+  /// **'Max {count}'**
+  String ttsMaxRepeated(int count);
+
+  /// Toggle label to mute viewer names in TTS
+  ///
+  /// In en, this message translates to:
+  /// **'Mute viewer names in text to speech'**
+  String get ttsMuteViewerNames;
+
+  /// Toggle label to replace underscores with spaces in viewer names
+  ///
+  /// In en, this message translates to:
+  /// **'Replace underscores with spaces in viewer names'**
+  String get ttsReplaceUnderscores;
+
+  /// Title for the repeated letter collapse setting
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse repeated letters in names'**
+  String get ttsCollapseRepeatedLetters;
+
+  /// Subtitle for the repeated letter collapse setting
+  ///
+  /// In en, this message translates to:
+  /// **'Avoids reading names like \"Celyyyyy\" letter by letter'**
+  String get ttsCollapseRepeatedLettersSubtitle;
+
+  /// Dropdown option for the number of repeated letters to keep in names
+  ///
+  /// In en, this message translates to:
+  /// **'{count,plural, =1{Keep 1 letter} other{Keep {count} letters}}'**
+  String ttsKeepNLetters(num count);
+
+  /// Toggle label to simplify TTS messages
+  ///
+  /// In en, this message translates to:
+  /// **'Simplify messages'**
+  String get ttsSimplifyMessages;
+
+  /// Subtitle for the message simplification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Simplify punctuation, symbols, and whitespace (including muting repetitive punctuation and unsupported characters)'**
+  String get ttsSimplifyMessagesSubtitle;
+
+  /// Toggle label for the flood filter
+  ///
+  /// In en, this message translates to:
+  /// **'Flood filter'**
+  String get ttsFloodFilter;
+
+  /// Subtitle for the flood filter toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Suppresses TTS when the same message is sent by many viewers in a short window'**
+  String get ttsFloodFilterSubtitle;
+
+  /// Title for the flood threshold setting
+  ///
+  /// In en, this message translates to:
+  /// **'Flood threshold'**
+  String get ttsFloodThreshold;
+
+  /// Subtitle for the flood threshold setting
+  ///
+  /// In en, this message translates to:
+  /// **'How many identical messages trigger suppression'**
+  String get ttsFloodThresholdSubtitle;
+
+  /// Dropdown option showing a viewer count threshold
+  ///
+  /// In en, this message translates to:
+  /// **'{count} viewers'**
+  String ttsNViewers(int count);
+
+  /// Title for the flood window setting
+  ///
+  /// In en, this message translates to:
+  /// **'Flood window'**
+  String get ttsFloodWindow;
+
+  /// Subtitle for the flood window setting
+  ///
+  /// In en, this message translates to:
+  /// **'Time window in which identical messages are counted'**
+  String get ttsFloodWindowSubtitle;
+
+  /// Dropdown option showing a duration in seconds
+  ///
+  /// In en, this message translates to:
+  /// **'{count} seconds'**
+  String ttsNSeconds(int count);
+
+  /// Toggle label for the stream chat game mode
+  ///
+  /// In en, this message translates to:
+  /// **'Stream chat game mode'**
+  String get ttsGameMode;
+
+  /// Subtitle for the stream chat game mode toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Silences single-character votes (Q/Z/S/D, H/B/G/D, 1–7) and three-number sequences (\"123\", \"1 2 3\") used in stream games'**
+  String get ttsGameModeSubtitle;
+
+  /// Toggle label to restrict TTS to subscriber messages only
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribers only'**
+  String get ttsSubscribersOnly;
+
+  /// Toggle label to only read messages that start with the TTS command prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Only say messages starting with !v'**
+  String get ttsTtsCommandOnly;
+
+  /// Section header for the TTS language selection (debug)
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get ttsLanguages;
+
+  /// Section header for the TTS voice selection (debug)
+  ///
+  /// In en, this message translates to:
+  /// **'Voices'**
+  String get ttsVoices;
+
+  /// Toggle label for the per-viewer voice feature (debug)
+  ///
+  /// In en, this message translates to:
+  /// **'Per-viewer voice'**
+  String get ttsPerViewerVoice;
+
+  /// Subtitle for the per-viewer voice toggle (debug)
+  ///
+  /// In en, this message translates to:
+  /// **'Identify your viewers by voice'**
+  String get ttsPerViewerVoiceSubtitle;
+
+  /// Label shown when a random voice is active (debug)
+  ///
+  /// In en, this message translates to:
+  /// **'Random'**
+  String get ttsRandom;
+
+  /// Button label to unlock high-quality TTS voices (debug)
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock high-quality voices'**
+  String get ttsUnlockHighQualityVoices;
 }
 
 class _AppLocalizationsDelegate

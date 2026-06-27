@@ -1012,5 +1012,182 @@
   "unmute": "Unmute",
   "@unmute": {
     "description": "Button label to unmute a user"
+  },
+  "ttsPlaySampleMessage": "Play sample message",
+  "@ttsPlaySampleMessage": {
+    "description": "Button label to play a sample TTS message"
+  },
+  "ttsRate": "Text to Speech Rate",
+  "@ttsRate": {
+    "description": "Section header for the TTS rate slider"
+  },
+  "ttsPitch": "Text to Speech Pitch",
+  "@ttsPitch": {
+    "description": "Section header for the TTS pitch slider"
+  },
+  "ttsMuteBots": "Mute text to speech for bots",
+  "@ttsMuteBots": {
+    "description": "Toggle label to mute TTS for bot messages"
+  },
+  "ttsMuteReplies": "Mute text to speech for replies",
+  "@ttsMuteReplies": {
+    "description": "Toggle label to mute TTS for reply messages"
+  },
+  "ttsMuteEmotes": "Mute all emotes in text to speech",
+  "@ttsMuteEmotes": {
+    "description": "Toggle label to mute all emotes in TTS"
+  },
+  "ttsAllowedEmotes": "Allowed emotes",
+  "@ttsAllowedEmotes": {
+    "description": "Title for the allowed emotes list tile"
+  },
+  "ttsAllowedEmotesHint": "Allow specific emotes (e.g. \"Kappa*\") to still be read aloud",
+  "@ttsAllowedEmotesHint": {
+    "description": "Subtitle when the allowed emotes list is empty"
+  },
+  "ttsAllowedEmotesCount": "{count,plural, =1{1 allowed emote} other{{count} allowed emotes}}",
+  "@ttsAllowedEmotesCount": {
+    "description": "Subtitle showing how many emotes are currently allowed",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "ttsAllowedEmotesMuteDisabledHint": "Enable \"Mute all emotes\" to allow exceptions",
+  "@ttsAllowedEmotesMuteDisabledHint": {
+    "description": "Subtitle for the allowed emotes tile when mute emotes is off"
+  },
+  "ttsLimitRepeatedEmojis": "Limit repeated emojis",
+  "@ttsLimitRepeatedEmojis": {
+    "description": "Title for the repeated emoji limit setting"
+  },
+  "ttsLimitRepeatedEmojisSubtitle": "Stop TTS from reading the same emoji or emote more than a set number of times per message",
+  "@ttsLimitRepeatedEmojisSubtitle": {
+    "description": "Subtitle for the repeated emoji limit setting"
+  },
+  "ttsOptionOff": "Off",
+  "@ttsOptionOff": {
+    "description": "Dropdown option to disable a TTS feature"
+  },
+  "ttsMaxRepeated": "Max {count}",
+  "@ttsMaxRepeated": {
+    "description": "Dropdown option for the maximum number of repeated emojis or emotes",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ttsMuteViewerNames": "Mute viewer names in text to speech",
+  "@ttsMuteViewerNames": {
+    "description": "Toggle label to mute viewer names in TTS"
+  },
+  "ttsReplaceUnderscores": "Replace underscores with spaces in viewer names",
+  "@ttsReplaceUnderscores": {
+    "description": "Toggle label to replace underscores with spaces in viewer names"
+  },
+  "ttsCollapseRepeatedLetters": "Collapse repeated letters in names",
+  "@ttsCollapseRepeatedLetters": {
+    "description": "Title for the repeated letter collapse setting"
+  },
+  "ttsCollapseRepeatedLettersSubtitle": "Avoids reading names like \"Celyyyyy\" letter by letter",
+  "@ttsCollapseRepeatedLettersSubtitle": {
+    "description": "Subtitle for the repeated letter collapse setting"
+  },
+  "ttsKeepNLetters": "{count,plural, =1{Keep 1 letter} other{Keep {count} letters}}",
+  "@ttsKeepNLetters": {
+    "description": "Dropdown option for the number of repeated letters to keep in names",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "ttsSimplifyMessages": "Simplify messages",
+  "@ttsSimplifyMessages": {
+    "description": "Toggle label to simplify TTS messages"
+  },
+  "ttsSimplifyMessagesSubtitle": "Simplify punctuation, symbols, and whitespace (including muting repetitive punctuation and unsupported characters)",
+  "@ttsSimplifyMessagesSubtitle": {
+    "description": "Subtitle for the message simplification toggle"
+  },
+  "ttsFloodFilter": "Flood filter",
+  "@ttsFloodFilter": {
+    "description": "Toggle label for the flood filter"
+  },
+  "ttsFloodFilterSubtitle": "Suppresses TTS when the same message is sent by many viewers in a short window",
+  "@ttsFloodFilterSubtitle": {
+    "description": "Subtitle for the flood filter toggle"
+  },
+  "ttsFloodThreshold": "Flood threshold",
+  "@ttsFloodThreshold": {
+    "description": "Title for the flood threshold setting"
+  },
+  "ttsFloodThresholdSubtitle": "How many identical messages trigger suppression",
+  "@ttsFloodThresholdSubtitle": {
+    "description": "Subtitle for the flood threshold setting"
+  },
+  "ttsNViewers": "{count} viewers",
+  "@ttsNViewers": {
+    "description": "Dropdown option showing a viewer count threshold",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ttsFloodWindow": "Flood window",
+  "@ttsFloodWindow": {
+    "description": "Title for the flood window setting"
+  },
+  "ttsFloodWindowSubtitle": "Time window in which identical messages are counted",
+  "@ttsFloodWindowSubtitle": {
+    "description": "Subtitle for the flood window setting"
+  },
+  "ttsNSeconds": "{count} seconds",
+  "@ttsNSeconds": {
+    "description": "Dropdown option showing a duration in seconds",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ttsGameMode": "Stream chat game mode",
+  "@ttsGameMode": {
+    "description": "Toggle label for the stream chat game mode"
+  },
+  "ttsGameModeSubtitle": "Silences single-character votes (Q/Z/S/D, H/B/G/D, 1–7) and three-number sequences (\"123\", \"1 2 3\") used in stream games",
+  "@ttsGameModeSubtitle": {
+    "description": "Subtitle for the stream chat game mode toggle"
+  },
+  "ttsSubscribersOnly": "Subscribers only",
+  "@ttsSubscribersOnly": {
+    "description": "Toggle label to restrict TTS to subscriber messages only"
+  },
+  "ttsTtsCommandOnly": "Only say messages starting with !v",
+  "@ttsTtsCommandOnly": {
+    "description": "Toggle label to only read messages that start with the TTS command prefix"
+  },
+  "ttsLanguages": "Languages",
+  "@ttsLanguages": {
+    "description": "Section header for the TTS language selection (debug)"
+  },
+  "ttsVoices": "Voices",
+  "@ttsVoices": {
+    "description": "Section header for the TTS voice selection (debug)"
+  },
+  "ttsPerViewerVoice": "Per-viewer voice",
+  "@ttsPerViewerVoice": {
+    "description": "Toggle label for the per-viewer voice feature (debug)"
+  },
+  "ttsPerViewerVoiceSubtitle": "Identify your viewers by voice",
+  "@ttsPerViewerVoiceSubtitle": {
+    "description": "Subtitle for the per-viewer voice toggle (debug)"
+  },
+  "ttsRandom": "Random",
+  "@ttsRandom": {
+    "description": "Label shown when a random voice is active (debug)"
+  },
+  "ttsUnlockHighQualityVoices": "Unlock high-quality voices",
+  "@ttsUnlockHighQualityVoices": {
+    "description": "Button label to unlock high-quality TTS voices (debug)"
   }
 }

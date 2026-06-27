@@ -710,7 +710,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get textToSpeechDisabled => 'Synthèse vocale désactivée';
 
   @override
-  String get alertsEnabled => 'Alerts only';
+  String get alertsEnabled => 'Alertes uniquement';
 
   @override
   String get mutedUsers => 'Utilisateurs en sourdine';
@@ -727,4 +727,159 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get unmute => 'Rétablir';
+
+  @override
+  String get ttsPlaySampleMessage => 'Jouer le message de test';
+
+  @override
+  String get ttsRate => 'Vitesse de la synthèse vocale';
+
+  @override
+  String get ttsPitch => 'Tonalité de la synthèse vocale';
+
+  @override
+  String get ttsMuteBots => 'Désactiver la synthèse vocale pour les bots';
+
+  @override
+  String get ttsMuteReplies =>
+      'Désactiver la synthèse vocale pour les réponses';
+
+  @override
+  String get ttsMuteEmotes =>
+      'Désactiver tous les émoticônes dans la synthèse vocale';
+
+  @override
+  String get ttsAllowedEmotes => 'Émoticônes autorisés';
+
+  @override
+  String get ttsAllowedEmotesHint =>
+      'Autoriser des émoticônes spécifiques (ex. \"Kappa*\") à être lus à voix haute';
+
+  @override
+  String ttsAllowedEmotesCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count émoticônes autorisés',
+      one: '1 émoticône autorisé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ttsAllowedEmotesMuteDisabledHint =>
+      'Activer \"Désactiver tous les émoticônes\" pour permettre des exceptions';
+
+  @override
+  String get ttsLimitRepeatedEmojis => 'Limiter les emojis répétés';
+
+  @override
+  String get ttsLimitRepeatedEmojisSubtitle =>
+      'Empêche la synthèse vocale de lire le même emoji ou émoticône plus d\'un certain nombre de fois par message';
+
+  @override
+  String get ttsOptionOff => 'Désactivé';
+
+  @override
+  String ttsMaxRepeated(int count) {
+    return 'Max $count';
+  }
+
+  @override
+  String get ttsMuteViewerNames =>
+      'Désactiver la lecture des noms dans la synthèse vocale';
+
+  @override
+  String get ttsReplaceUnderscores =>
+      'Remplacer les tirets bas par des espaces dans les noms';
+
+  @override
+  String get ttsCollapseRepeatedLetters =>
+      'Réduire les lettres répétées dans les noms';
+
+  @override
+  String get ttsCollapseRepeatedLettersSubtitle =>
+      'Évite de lire les noms comme \"Celyyyyy\" lettre par lettre';
+
+  @override
+  String ttsKeepNLetters(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Garder $count lettres',
+      one: 'Garder 1 lettre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ttsSimplifyMessages => 'Simplifier les messages';
+
+  @override
+  String get ttsSimplifyMessagesSubtitle =>
+      'Simplifier la ponctuation, les symboles et les espaces (y compris la ponctuation répétitive et les caractères non supportés)';
+
+  @override
+  String get ttsFloodFilter => 'Filtre anti-flood';
+
+  @override
+  String get ttsFloodFilterSubtitle =>
+      'Désactive la synthèse vocale quand le même message est envoyé par de nombreux spectateurs dans un court délai';
+
+  @override
+  String get ttsFloodThreshold => 'Seuil du filtre anti-flood';
+
+  @override
+  String get ttsFloodThresholdSubtitle =>
+      'Nombre de messages similaires pour déclencher la suppression';
+
+  @override
+  String ttsNViewers(int count) {
+    return '$count spectateurs';
+  }
+
+  @override
+  String get ttsFloodWindow => 'Fenêtre temporelle du filtre';
+
+  @override
+  String get ttsFloodWindowSubtitle =>
+      'Durée pendant laquelle les messages similaires sont comptabilisés';
+
+  @override
+  String ttsNSeconds(int count) {
+    return '$count secondes';
+  }
+
+  @override
+  String get ttsGameMode => 'Mode jeu du chat';
+
+  @override
+  String get ttsGameModeSubtitle =>
+      'Réduit au silence les votes à un caractère (Q/Z/S/D, H/B/G/D, 1–7) et les séquences de trois chiffres (\"123\", \"1 2 3\") utilisés dans les jeux du stream';
+
+  @override
+  String get ttsSubscribersOnly => 'Abonnés uniquement';
+
+  @override
+  String get ttsTtsCommandOnly =>
+      'Lire uniquement les messages commençant par !v';
+
+  @override
+  String get ttsLanguages => 'Langues';
+
+  @override
+  String get ttsVoices => 'Voix';
+
+  @override
+  String get ttsPerViewerVoice => 'Voix par spectateur';
+
+  @override
+  String get ttsPerViewerVoiceSubtitle =>
+      'Identifiez vos spectateurs par leur voix';
+
+  @override
+  String get ttsRandom => 'Aléatoire';
+
+  @override
+  String get ttsUnlockHighQualityVoices => 'Débloquer les voix haute qualité';
 }
