@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rtchat/l10n/app_localizations.dart';
 import 'package:rtchat/models/tts.dart';
 import 'package:rtchat/models/tts/allowed_emote.dart';
 
@@ -26,7 +27,7 @@ class AllowedEmotesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Allowed emotes')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.ttsAllowedEmotesScreenTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showEditor(context),
         child: const Icon(Icons.add),
@@ -38,10 +39,7 @@ class AllowedEmotesScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                'When all emotes are muted, emotes matching these patterns are '
-                'still read aloud. Use * to match any text and ? to match a '
-                'single character (e.g. "Kappa*"). Optionally provide a '
-                'replacement to simplify what is spoken.',
+                AppLocalizations.of(context)!.ttsAllowedEmotesDescription,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -52,7 +50,7 @@ class AllowedEmotesScreen extends StatelessWidget {
               child: emotes.isEmpty
                   ? Center(
                       child: Text(
-                        'No allowed emotes',
+                        AppLocalizations.of(context)!.ttsNoAllowedEmotes,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: Theme.of(context)
@@ -70,13 +68,13 @@ class AllowedEmotesScreen extends StatelessWidget {
                           title: Text(emote.pattern),
                           subtitle:
                               replacement != null && replacement.isNotEmpty
-                                  ? Text('Spoken as "$replacement"')
+                                  ? Text(AppLocalizations.of(context)!.ttsAllowedEmoteSpokenAs(replacement))
                                   : null,
                           onTap: () => _showEditor(context,
                               existing: emote, index: index),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete_outline),
-                            tooltip: 'Remove',
+                            tooltip: AppLocalizations.of(context)!.remove,
                             onPressed: () => model.removeAllowedEmoteAt(index),
                           ),
                         );
@@ -133,8 +131,9 @@ class _AllowedEmoteDialogState extends State<_AllowedEmoteDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(widget.existing == null ? 'Add emote' : 'Edit emote'),
+      title: Text(widget.existing == null ? l10n.ttsAddEmote : l10n.ttsEditEmote),
       content: Form(
         key: _formKey,
         child: Column(
@@ -144,21 +143,21 @@ class _AllowedEmoteDialogState extends State<_AllowedEmoteDialog> {
               controller: _patternController,
               autofocus: true,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Pattern',
-                hintText: 'e.g. Kappa*',
+              decoration: InputDecoration(
+                labelText: l10n.ttsEmotePattern,
+                hintText: l10n.ttsEmotePatternHint,
               ),
               validator: (value) => (value == null || value.trim().isEmpty)
-                  ? 'Enter an emote pattern'
+                  ? l10n.ttsEmotePatternRequired
                   : null,
             ),
             TextFormField(
               controller: _replacementController,
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _submit(),
-              decoration: const InputDecoration(
-                labelText: 'Replacement (optional)',
-                hintText: 'e.g. Kappa',
+              decoration: InputDecoration(
+                labelText: l10n.ttsEmoteReplacement,
+                hintText: l10n.ttsEmoteReplacementHint,
               ),
             ),
           ],
@@ -167,11 +166,11 @@ class _AllowedEmoteDialogState extends State<_AllowedEmoteDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
         TextButton(
           onPressed: _submit,
-          child: const Text('Save'),
+          child: Text(l10n.save),
         ),
       ],
     );

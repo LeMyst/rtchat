@@ -869,4 +869,46 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get ttsUnlockHighQualityVoices => 'Unlock high-quality voices';
+
+  @override
+  String get ttsAllowedEmotesScreenTitle => 'Allowed emotes';
+
+  @override
+  String get ttsAllowedEmotesDescription =>
+      'When all emotes are muted, emotes matching these patterns are still read aloud. Use * to match any text and ? to match a single character (e.g. \"Kappa*\"). Optionally provide a replacement to simplify what is spoken.';
+
+  @override
+  String get ttsNoAllowedEmotes => 'No allowed emotes';
+
+  @override
+  String ttsAllowedEmoteSpokenAs(String replacement) {
+    return 'Spoken as \"$replacement\"';
+  }
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get ttsAddEmote => 'Add emote';
+
+  @override
+  String get ttsEditEmote => 'Edit emote';
+
+  @override
+  String get ttsEmotePattern => 'Pattern';
+
+  @override
+  String get ttsEmotePatternHint => 'e.g. Kappa*';
+
+  @override
+  String get ttsEmotePatternRequired => 'Enter an emote pattern';
+
+  @override
+  String get ttsEmoteReplacement => 'Replacement (optional)';
+
+  @override
+  String get ttsEmoteReplacementHint => 'e.g. Kappa';
+
+  @override
+  String get save => 'Save';
 }

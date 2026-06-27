@@ -1379,6 +1379,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unlock high-quality voices'**
   String get ttsUnlockHighQualityVoices;
+
+  /// Title for the allowed emotes settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed emotes'**
+  String get ttsAllowedEmotesScreenTitle;
+
+  /// Explanatory text at the top of the allowed emotes screen
+  ///
+  /// In en, this message translates to:
+  /// **'When all emotes are muted, emotes matching these patterns are still read aloud. Use * to match any text and ? to match a single character (e.g. \"Kappa*\"). Optionally provide a replacement to simplify what is spoken.'**
+  String get ttsAllowedEmotesDescription;
+
+  /// Empty state label when the allowed emotes list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No allowed emotes'**
+  String get ttsNoAllowedEmotes;
+
+  /// Subtitle for an allowed emote entry that has a replacement
+  ///
+  /// In en, this message translates to:
+  /// **'Spoken as \"{replacement}\"'**
+  String ttsAllowedEmoteSpokenAs(String replacement);
+
+  /// Tooltip for a remove/delete icon button
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// Title for the dialog that adds a new allowed emote
+  ///
+  /// In en, this message translates to:
+  /// **'Add emote'**
+  String get ttsAddEmote;
+
+  /// Title for the dialog that edits an existing allowed emote
+  ///
+  /// In en, this message translates to:
+  /// **'Edit emote'**
+  String get ttsEditEmote;
+
+  /// Label for the emote pattern text field
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get ttsEmotePattern;
+
+  /// Hint text for the emote pattern text field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Kappa*'**
+  String get ttsEmotePatternHint;
+
+  /// Validation error shown when the emote pattern field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an emote pattern'**
+  String get ttsEmotePatternRequired;
+
+  /// Label for the optional emote replacement text field
+  ///
+  /// In en, this message translates to:
+  /// **'Replacement (optional)'**
+  String get ttsEmoteReplacement;
+
+  /// Hint text for the emote replacement text field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Kappa'**
+  String get ttsEmoteReplacementHint;
+
+  /// Button label to save changes in a dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate
