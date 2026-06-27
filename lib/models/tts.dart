@@ -43,6 +43,7 @@ class TtsModel extends ChangeNotifier {
   static final _punctuation5 = RegExp(r'[\u00a0-\u00bf]');
   static final _diacritics = RegExp(r'[\u0300-\u036f]');
   static final _repeatedChars = RegExp(r'(.)\1{2,}');
+  static final _repeatedEmojiPattern = RegExp(r'(.)\1+', unicode: true);
   static final _boxDrawing = RegExp(r'[\u2500-\u257f]');
   static final _braille = RegExp(r'[\u2800-\u28ff]');
   static final _emojis = RegExp(
@@ -82,6 +83,7 @@ class TtsModel extends ChangeNotifier {
   // the TTS engine from spelling out the trailing letters one by one.
   var _maxRepeatedCharactersInNames = 2;
   var _isTtsCommandEncouraged = false;
+  var _maxRepeatedEmojis = 3;
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
   var _mode = TtsMode.disabled;
@@ -153,12 +155,23 @@ class TtsModel extends ChangeNotifier {
   String getVocalization(AppLocalizations l10n, MessageModel model,
       {bool includeAuthorPrelude = false}) {
     if (model is TwitchMessageModel) {
+      final emoteCounts = <String, int>{};
+      var anyEmoteDropped = false;
       var text = model.tokenized
           .map<String?>((token) {
             if (token is TextToken) {
               return token.text;
             } else if (token is EmoteToken) {
-              return _vocalizeEmote(token);
+              final vocalization = _vocalizeEmote(token);
+              if (vocalization != null && _maxRepeatedEmojis > 0) {
+                final count = (emoteCounts[token.code] ?? 0) + 1;
+                emoteCounts[token.code] = count;
+                if (count > _maxRepeatedEmojis) {
+                  anyEmoteDropped = true;
+                  return null;
+                }
+              }
+              return vocalization;
             } else if (token is UserMentionToken) {
               return _collapseNameRepeats(token.username).replaceAll("_", " ");
             } else if (token is LinkToken) {
@@ -171,6 +184,13 @@ class TtsModel extends ChangeNotifier {
 
       if (_isEmoteMuted) {
         text = text.replaceAll(_emojis, '').replaceAll(_whitespace, ' ').trim();
+      } else {
+        if (_maxRepeatedEmojis > 0) {
+          text = limitRepeatedEmojis(text, _maxRepeatedEmojis);
+        }
+        if (anyEmoteDropped) {
+          text = text.replaceAll(_whitespace, ' ').trim();
+        }
       }
 
       if (text.toLowerCase().startsWith("!v ")) {
@@ -277,6 +297,18 @@ class TtsModel extends ChangeNotifier {
 
   String _collapseNameRepeats(String name) =>
       collapseRepeatedLetters(name, _maxRepeatedCharactersInNames);
+
+  /// Caps runs of the same unicode emoji to at most [maxCount] occurrences.
+  /// Non-emoji characters are left untouched. Disabled when [maxCount] is 0.
+  static String limitRepeatedEmojis(String text, int maxCount) {
+    if (maxCount <= 0) return text;
+    return text.replaceAllMapped(_repeatedEmojiPattern, (match) {
+      final char = match.group(1)!;
+      if (!_emojis.hasMatch(char)) return match.group(0)!;
+      final runLength = match.group(0)!.length ~/ char.length;
+      return char * runLength.clamp(0, maxCount);
+    });
+  }
 
   /// Returns the text to speak for [token], or null if the emote should be
   /// dropped. When emotes aren't muted every emote is spoken by its code.
@@ -504,6 +536,15 @@ class TtsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Maximum times the same emoji or custom emote may be spoken per message.
+  /// 0 disables the limit.
+  int get maxRepeatedEmojis => _maxRepeatedEmojis;
+
+  set maxRepeatedEmojis(int value) {
+    _maxRepeatedEmojis = value;
+    notifyListeners();
+  }
+
   bool get isCloudTtsEnabled {
     return _isCloudTtsEnabled;
   }
@@ -725,6 +766,9 @@ class TtsModel extends ChangeNotifier {
     if (json['maxRepeatedCharactersInNames'] != null) {
       _maxRepeatedCharactersInNames = json['maxRepeatedCharactersInNames'];
     }
+    if (json['maxRepeatedEmojis'] != null) {
+      _maxRepeatedEmojis = json['maxRepeatedEmojis'];
+    }
     if (json['isRandomVoiceEnabled'] != null) {
       _isRandomVoiceEnabled = json['isRandomVoiceEnabled'];
     }
@@ -755,6 +799,7 @@ class TtsModel extends ChangeNotifier {
         "isPreludeMuted": isPreludeMuted,
         "isUnderscoreReplacementEnabled": isUnderscoreReplacementEnabled,
         "maxRepeatedCharactersInNames": maxRepeatedCharactersInNames,
+        "maxRepeatedEmojis": maxRepeatedEmojis,
         "isTtsCommandEncouraged": isTtsCommandEncouraged,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
         "language": language.languageCode,

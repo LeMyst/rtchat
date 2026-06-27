@@ -280,6 +280,26 @@ class TextToSpeechScreen extends StatelessWidget {
                       context, '/settings/text-to-speech/allowed-emotes')
                   : null,
             ),
+            ListTile(
+              title: const Text("Limit repeated emojis"),
+              subtitle: const Text(
+                  "Stop TTS from reading the same emoji or emote more than a set number of times per message"),
+              trailing: DropdownButton<int>(
+                value: model.maxRepeatedEmojis,
+                onChanged: (value) {
+                  if (value != null) {
+                    model.maxRepeatedEmojis = value;
+                  }
+                },
+                items: const [
+                  DropdownMenuItem(value: 0, child: Text("Off")),
+                  DropdownMenuItem(value: 1, child: Text("Max 1")),
+                  DropdownMenuItem(value: 2, child: Text("Max 2")),
+                  DropdownMenuItem(value: 3, child: Text("Max 3")),
+                  DropdownMenuItem(value: 5, child: Text("Max 5")),
+                ],
+              ),
+            ),
             SwitchListTile.adaptive(
               title: const Text("Mute viewer names in text to speech"),
               value: model.isPreludeMuted,

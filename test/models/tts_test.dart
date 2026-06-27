@@ -6,6 +6,43 @@ import 'package:rtchat/tts_plugin.dart';
 void main() {
   final ttsQueue = TTSQueue();
 
+  group('limitRepeatedEmojis', () {
+    test('caps runs of the same emoji beyond the max', () {
+      expect(TtsModel.limitRepeatedEmojis('🎉🎉🎉🎉🎉', 3), equals('🎉🎉🎉'));
+      expect(TtsModel.limitRepeatedEmojis('🎉🎉🎉🎉🎉🎉🎉', 1), equals('🎉'));
+    });
+
+    test('leaves runs at or below the max unchanged', () {
+      expect(TtsModel.limitRepeatedEmojis('🎉🎉🎉', 3), equals('🎉🎉🎉'));
+      expect(TtsModel.limitRepeatedEmojis('🎉🎉', 3), equals('🎉🎉'));
+      expect(TtsModel.limitRepeatedEmojis('🎉', 3), equals('🎉'));
+    });
+
+    test('does not affect non-emoji repeated characters', () {
+      expect(TtsModel.limitRepeatedEmojis('aaaa', 3), equals('aaaa'));
+      expect(TtsModel.limitRepeatedEmojis('hahaha', 3), equals('hahaha'));
+    });
+
+    test('handles mixed emoji and text', () {
+      expect(TtsModel.limitRepeatedEmojis('great 🎉🎉🎉🎉🎉 stream', 3),
+          equals('great 🎉🎉🎉 stream'));
+    });
+
+    test('handles multiple different emoji runs independently', () {
+      expect(TtsModel.limitRepeatedEmojis('🎉🎉🎉🎉🔥🔥🔥🔥', 2),
+          equals('🎉🎉🔥🔥'));
+    });
+
+    test('maxCount 0 disables the limit', () {
+      expect(TtsModel.limitRepeatedEmojis('🎉🎉🎉🎉🎉', 0),
+          equals('🎉🎉🎉🎉🎉'));
+    });
+
+    test('handles empty string', () {
+      expect(TtsModel.limitRepeatedEmojis('', 3), equals(''));
+    });
+  });
+
   group('collapseRepeatedLetters', () {
     test('collapses long runs down to the requested length', () {
       expect(TtsModel.collapseRepeatedLetters('Celyyyyy', 2), equals('Celyy'));
