@@ -77,6 +77,10 @@ class TtsModel extends ChangeNotifier {
   var _allowedEmotes = <TtsAllowedEmote>[];
   var _isPreludeMuted = false;
   var _isUnderscoreReplacementEnabled = true;
+  // Number of consecutive identical letters to keep in spoken usernames. 0
+  // disables the normalization. Collapsing long runs (e.g. "Celyyyyy") stops
+  // the TTS engine from spelling out the trailing letters one by one.
+  var _maxRepeatedCharactersInNames = 2;
   var _isTtsCommandEncouraged = false;
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
@@ -156,7 +160,7 @@ class TtsModel extends ChangeNotifier {
             } else if (token is EmoteToken) {
               return _vocalizeEmote(token);
             } else if (token is UserMentionToken) {
-              return token.username.replaceAll("_", " ");
+              return _collapseNameRepeats(token.username).replaceAll("_", " ");
             } else if (token is LinkToken) {
               return token.url.host;
             }
@@ -200,6 +204,7 @@ class TtsModel extends ChangeNotifier {
         return "";
       }
       var author = model.author.displayName ?? model.author.login;
+      author = _collapseNameRepeats(author);
       if (_isUnderscoreReplacementEnabled) {
         author = author
             .replaceAll("_", " ")
@@ -220,22 +225,27 @@ class TtsModel extends ChangeNotifier {
     } else if (model is SystemMessageModel) {
       return model.text;
     } else if (model is TwitchRaidEventModel) {
-      return l10n.raidEventMessage(model.from.displayName ?? "", model.viewers);
+      return l10n.raidEventMessage(
+          _collapseNameRepeats(model.from.displayName ?? ""), model.viewers);
     } else if (model is TwitchSubscriptionEventModel) {
       return l10n.subscriptionEvent(
-          model.subscriberUserName, model.tier.replaceAll("000", ""));
+          _collapseNameRepeats(model.subscriberUserName),
+          model.tier.replaceAll("000", ""));
     } else if (model is TwitchSubscriptionGiftEventModel) {
-      return l10n.subscriptionGiftEvent(model.gifterUserName, model.total,
-          model.tier.replaceAll("000", ""), model.cumulativeTotal);
+      return l10n.subscriptionGiftEvent(
+          _collapseNameRepeats(model.gifterUserName),
+          model.total,
+          model.tier.replaceAll("000", ""),
+          model.cumulativeTotal);
     } else if (model is TwitchSubscriptionMessageEventModel) {
       return l10n.subscriptionMessageEvent(
-        model.subscriberUserName,
+        _collapseNameRepeats(model.subscriberUserName),
         model.cumulativeMonths,
         model.tier.replaceAll("000", ""),
       );
     } else if (model is TwitchFollowEventModel) {
-      return l10n.followingEvent(
-          model.followers.first.displayName ?? model.followers.first.login);
+      return l10n.followingEvent(_collapseNameRepeats(
+          model.followers.first.displayName ?? model.followers.first.login));
     } else if (model is TwitchCheerEventModel) {
     } else if (model is TwitchPollEventModel) {
     } else if (model is TwitchChannelPointRedemptionEventModel) {
@@ -251,6 +261,22 @@ class TtsModel extends ChangeNotifier {
     } else if (model is TwitchShoutoutReceiveEventModel) {}
     return "";
   }
+
+  /// Collapses runs of 3 or more identical characters in [name] down to [keep]
+  /// characters (e.g. `collapseRepeatedLetters("Celyyyyy", 2)` -> "Celyy"), so
+  /// the TTS engine pronounces the name instead of spelling out the repeated
+  /// letters. Returns [name] unchanged when [keep] is 0 or less, or the name is
+  /// empty. Runs of exactly 2 characters are never touched.
+  static String collapseRepeatedLetters(String name, int keep) {
+    if (keep <= 0 || name.isEmpty) {
+      return name;
+    }
+    return name.replaceAllMapped(
+        _repeatedChars, (match) => match.group(1)! * keep);
+  }
+
+  String _collapseNameRepeats(String name) =>
+      collapseRepeatedLetters(name, _maxRepeatedCharactersInNames);
 
   /// Returns the text to speak for [token], or null if the emote should be
   /// dropped. When emotes aren't muted every emote is spoken by its code.
@@ -463,6 +489,18 @@ class TtsModel extends ChangeNotifier {
 
   set isUnderscoreReplacementEnabled(bool value) {
     _isUnderscoreReplacementEnabled = value;
+    notifyListeners();
+  }
+
+  /// Number of consecutive identical letters kept in spoken usernames. 0 turns
+  /// the normalization off; 1 or 2 collapse runs of 3+ letters down to that
+  /// many.
+  int get maxRepeatedCharactersInNames {
+    return _maxRepeatedCharactersInNames;
+  }
+
+  set maxRepeatedCharactersInNames(int value) {
+    _maxRepeatedCharactersInNames = value;
     notifyListeners();
   }
 
@@ -684,6 +722,9 @@ class TtsModel extends ChangeNotifier {
     if (json['isUnderscoreReplacementEnabled'] != null) {
       _isUnderscoreReplacementEnabled = json['isUnderscoreReplacementEnabled'];
     }
+    if (json['maxRepeatedCharactersInNames'] != null) {
+      _maxRepeatedCharactersInNames = json['maxRepeatedCharactersInNames'];
+    }
     if (json['isRandomVoiceEnabled'] != null) {
       _isRandomVoiceEnabled = json['isRandomVoiceEnabled'];
     }
@@ -713,6 +754,7 @@ class TtsModel extends ChangeNotifier {
         "isTextSimplificationEnabled": isTextSimplificationEnabled,
         "isPreludeMuted": isPreludeMuted,
         "isUnderscoreReplacementEnabled": isUnderscoreReplacementEnabled,
+        "maxRepeatedCharactersInNames": maxRepeatedCharactersInNames,
         "isTtsCommandEncouraged": isTtsCommandEncouraged,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
         "language": language.languageCode,

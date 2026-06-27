@@ -294,6 +294,24 @@ class TextToSpeechScreen extends StatelessWidget {
                 model.isUnderscoreReplacementEnabled = value;
               },
             ),
+            ListTile(
+              title: const Text("Collapse repeated letters in names"),
+              subtitle: const Text(
+                  "Avoids reading names like \"Celyyyyy\" letter by letter"),
+              trailing: DropdownButton<int>(
+                value: model.maxRepeatedCharactersInNames,
+                onChanged: (value) {
+                  if (value != null) {
+                    model.maxRepeatedCharactersInNames = value;
+                  }
+                },
+                items: const [
+                  DropdownMenuItem(value: 0, child: Text("Off")),
+                  DropdownMenuItem(value: 1, child: Text("Keep 1 letter")),
+                  DropdownMenuItem(value: 2, child: Text("Keep 2 letters")),
+                ],
+              ),
+            ),
             SwitchListTile.adaptive(
               title: const Text("Simplify messages"),
               subtitle: const Text("Simplify punctuation, symbols, and whitespace (including muting repetitive punctuation and unsupported characters)"),

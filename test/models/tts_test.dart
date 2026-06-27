@@ -1,9 +1,36 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rtchat/models/tts.dart';
 import 'package:rtchat/tts_plugin.dart';
 
 void main() {
   final ttsQueue = TTSQueue();
+
+  group('collapseRepeatedLetters', () {
+    test('collapses long runs down to the requested length', () {
+      expect(TtsModel.collapseRepeatedLetters('Celyyyyy', 2), equals('Celyy'));
+      expect(TtsModel.collapseRepeatedLetters('Celyyyyy', 1), equals('Cely'));
+    });
+
+    test('keep <= 0 disables the normalization', () {
+      expect(
+          TtsModel.collapseRepeatedLetters('Celyyyyy', 0), equals('Celyyyyy'));
+    });
+
+    test('leaves runs of two or fewer characters untouched', () {
+      expect(TtsModel.collapseRepeatedLetters('Anna', 1), equals('Anna'));
+      expect(TtsModel.collapseRepeatedLetters('Cely', 2), equals('Cely'));
+    });
+
+    test('collapses every run in the name', () {
+      expect(
+          TtsModel.collapseRepeatedLetters('aaabbbccc', 2), equals('aabbcc'));
+    });
+
+    test('handles an empty name', () {
+      expect(TtsModel.collapseRepeatedLetters('', 2), equals(''));
+    });
+  });
 
   test('Queue starts empty', () {
     expect(ttsQueue.isEmpty, isTrue);
