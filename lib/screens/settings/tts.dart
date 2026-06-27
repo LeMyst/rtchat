@@ -341,6 +341,16 @@ class TextToSpeechScreen extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
+              title: const Text("Stream chat game mode"),
+              subtitle: const Text(
+                  "Silences single-character votes (Q/Z/S/D, H/B/G/D, 1–7) and "
+                  "three-number sequences (\"123\", \"1 2 3\") used in stream games"),
+              value: model.isGameModeEnabled,
+              onChanged: (value) {
+                model.isGameModeEnabled = value;
+              },
+            ),
+            SwitchListTile.adaptive(
               title: const Text("Subscribers only"),
               value: model.isSubscribersOnly,
               onChanged: (value) {

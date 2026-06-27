@@ -44,6 +44,13 @@ class TtsModel extends ChangeNotifier {
   static final _diacritics = RegExp(r'[\u0300-\u036f]');
   static final _repeatedChars = RegExp(r'(.)\1{2,}');
   static final _repeatedEmojiPattern = RegExp(r'(.)\1+', unicode: true);
+
+  // Game mode: matches single-char votes — QZSD/HBGD movement keys or digit 1-7
+  static final _gameModeOneChar =
+      RegExp(r'^[qzsdhbg1-7]$', caseSensitive: false);
+  // Game mode: matches exactly three whitespace-separated numbers OR a bare 3-digit number
+  static final _gameModeThreeNumbers =
+      RegExp(r'^\d+(\s+\d+){2}$|^\d{3}$');
   static final _boxDrawing = RegExp(r'[\u2500-\u257f]');
   static final _braille = RegExp(r'[\u2800-\u28ff]');
   static final _emojis = RegExp(
@@ -84,6 +91,7 @@ class TtsModel extends ChangeNotifier {
   var _maxRepeatedCharactersInNames = 2;
   var _isTtsCommandEncouraged = false;
   var _maxRepeatedEmojis = 3;
+  var _isGameModeEnabled = false;
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
   var _mode = TtsMode.disabled;
@@ -545,6 +553,12 @@ class TtsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get isGameModeEnabled => _isGameModeEnabled;
+
+  set isGameModeEnabled(bool value) {
+    _isGameModeEnabled = value;
+    notifyListeners();
+  }
   bool get isCloudTtsEnabled {
     return _isCloudTtsEnabled;
   }
@@ -629,6 +643,14 @@ class TtsModel extends ChangeNotifier {
 
       if(model.isCommand && !model.message.toLowerCase().startsWith("!v")) {
         return;
+      }
+
+      if (_isGameModeEnabled) {
+        final raw = model.message.trim();
+        if (_gameModeOneChar.hasMatch(raw) ||
+            _gameModeThreeNumbers.hasMatch(raw)) {
+          return;
+        }
       }
     }
 
@@ -769,6 +791,9 @@ class TtsModel extends ChangeNotifier {
     if (json['maxRepeatedEmojis'] != null) {
       _maxRepeatedEmojis = json['maxRepeatedEmojis'];
     }
+    if (json['isGameModeEnabled'] != null) {
+      _isGameModeEnabled = json['isGameModeEnabled'];
+    }
     if (json['isRandomVoiceEnabled'] != null) {
       _isRandomVoiceEnabled = json['isRandomVoiceEnabled'];
     }
@@ -800,6 +825,7 @@ class TtsModel extends ChangeNotifier {
         "isUnderscoreReplacementEnabled": isUnderscoreReplacementEnabled,
         "maxRepeatedCharactersInNames": maxRepeatedCharactersInNames,
         "maxRepeatedEmojis": maxRepeatedEmojis,
+        "isGameModeEnabled": isGameModeEnabled,
         "isTtsCommandEncouraged": isTtsCommandEncouraged,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
         "language": language.languageCode,
