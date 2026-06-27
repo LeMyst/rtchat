@@ -341,6 +341,56 @@ class TextToSpeechScreen extends StatelessWidget {
               },
             ),
             SwitchListTile.adaptive(
+              title: const Text("Flood filter"),
+              subtitle: const Text(
+                  "Suppresses TTS when the same message is sent by many viewers in a short window"),
+              value: model.isFloodFilterEnabled,
+              onChanged: (value) {
+                model.isFloodFilterEnabled = value;
+              },
+            ),
+            ListTile(
+              enabled: model.isFloodFilterEnabled,
+              title: const Text("Flood threshold"),
+              subtitle: const Text(
+                  "How many identical messages trigger suppression"),
+              trailing: DropdownButton<int>(
+                value: model.floodFilterThreshold,
+                onChanged: model.isFloodFilterEnabled
+                    ? (value) {
+                        if (value != null) model.floodFilterThreshold = value;
+                      }
+                    : null,
+                items: const [
+                  DropdownMenuItem(value: 3, child: Text("3 viewers")),
+                  DropdownMenuItem(value: 5, child: Text("5 viewers")),
+                  DropdownMenuItem(value: 10, child: Text("10 viewers")),
+                  DropdownMenuItem(value: 20, child: Text("20 viewers")),
+                ],
+              ),
+            ),
+            ListTile(
+              enabled: model.isFloodFilterEnabled,
+              title: const Text("Flood window"),
+              subtitle: const Text(
+                  "Time window in which identical messages are counted"),
+              trailing: DropdownButton<int>(
+                value: model.floodFilterWindowSeconds,
+                onChanged: model.isFloodFilterEnabled
+                    ? (value) {
+                        if (value != null)
+                          model.floodFilterWindowSeconds = value;
+                      }
+                    : null,
+                items: const [
+                  DropdownMenuItem(value: 5, child: Text("5 seconds")),
+                  DropdownMenuItem(value: 10, child: Text("10 seconds")),
+                  DropdownMenuItem(value: 30, child: Text("30 seconds")),
+                  DropdownMenuItem(value: 60, child: Text("60 seconds")),
+                ],
+              ),
+            ),
+            SwitchListTile.adaptive(
               title: const Text("Stream chat game mode"),
               subtitle: const Text(
                   "Silences single-character votes (Q/Z/S/D, H/B/G/D, 1–7) and "

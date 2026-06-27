@@ -92,6 +92,11 @@ class TtsModel extends ChangeNotifier {
   var _isTtsCommandEncouraged = false;
   var _maxRepeatedEmojis = 3;
   var _isGameModeEnabled = false;
+  var _isFloodFilterEnabled = false;
+  var _floodFilterThreshold = 5;
+  var _floodFilterWindowSeconds = 10;
+  // Rolling-window message counts: normalised text → timestamps of recent sends
+  final _floodTimestamps = <String, Queue<DateTime>>{};
   var _speed = Platform.isAndroid ? 0.8 : 0.395;
   var _pitch = 1.0;
   var _mode = TtsMode.disabled;
@@ -559,6 +564,32 @@ class TtsModel extends ChangeNotifier {
     _isGameModeEnabled = value;
     notifyListeners();
   }
+
+  bool get isFloodFilterEnabled => _isFloodFilterEnabled;
+
+  set isFloodFilterEnabled(bool value) {
+    _isFloodFilterEnabled = value;
+    if (!value) _floodTimestamps.clear();
+    notifyListeners();
+  }
+
+  /// Number of identical messages within the window before suppression kicks in.
+  int get floodFilterThreshold => _floodFilterThreshold;
+
+  set floodFilterThreshold(int value) {
+    _floodFilterThreshold = value;
+    notifyListeners();
+  }
+
+  /// Rolling window width in seconds for flood detection.
+  int get floodFilterWindowSeconds => _floodFilterWindowSeconds;
+
+  set floodFilterWindowSeconds(int value) {
+    _floodFilterWindowSeconds = value;
+    _floodTimestamps.clear();
+    notifyListeners();
+  }
+
   bool get isCloudTtsEnabled {
     return _isCloudTtsEnabled;
   }
@@ -649,6 +680,28 @@ class TtsModel extends ChangeNotifier {
         final raw = model.message.trim();
         if (_gameModeOneChar.hasMatch(raw) ||
             _gameModeThreeNumbers.hasMatch(raw)) {
+          return;
+        }
+      }
+
+      if (_isFloodFilterEnabled) {
+        final raw = model.message.trim();
+        // Group all game-pattern messages under a shared sentinel key so that
+        // "Q", "Z", "1", "2" etc. from different viewers count as the same flood.
+        final key = (_gameModeOneChar.hasMatch(raw) ||
+                _gameModeThreeNumbers.hasMatch(raw))
+            ? '\x00game\x00'
+            : raw.toLowerCase();
+        final now = DateTime.now();
+        final window = Duration(seconds: _floodFilterWindowSeconds);
+        final timestamps =
+            _floodTimestamps.putIfAbsent(key, () => Queue<DateTime>());
+        while (timestamps.isNotEmpty &&
+            now.difference(timestamps.first) > window) {
+          timestamps.removeFirst();
+        }
+        timestamps.addLast(now);
+        if (timestamps.length > _floodFilterThreshold) {
           return;
         }
       }
@@ -794,6 +847,15 @@ class TtsModel extends ChangeNotifier {
     if (json['isGameModeEnabled'] != null) {
       _isGameModeEnabled = json['isGameModeEnabled'];
     }
+    if (json['isFloodFilterEnabled'] != null) {
+      _isFloodFilterEnabled = json['isFloodFilterEnabled'];
+    }
+    if (json['floodFilterThreshold'] != null) {
+      _floodFilterThreshold = json['floodFilterThreshold'];
+    }
+    if (json['floodFilterWindowSeconds'] != null) {
+      _floodFilterWindowSeconds = json['floodFilterWindowSeconds'];
+    }
     if (json['isRandomVoiceEnabled'] != null) {
       _isRandomVoiceEnabled = json['isRandomVoiceEnabled'];
     }
@@ -826,6 +888,9 @@ class TtsModel extends ChangeNotifier {
         "maxRepeatedCharactersInNames": maxRepeatedCharactersInNames,
         "maxRepeatedEmojis": maxRepeatedEmojis,
         "isGameModeEnabled": isGameModeEnabled,
+        "isFloodFilterEnabled": isFloodFilterEnabled,
+        "floodFilterThreshold": floodFilterThreshold,
+        "floodFilterWindowSeconds": floodFilterWindowSeconds,
         "isTtsCommandEncouraged": isTtsCommandEncouraged,
         "isRandomVoiceEnabled": isRandomVoiceEnabled,
         "language": language.languageCode,
