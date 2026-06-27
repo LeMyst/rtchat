@@ -15,9 +15,10 @@ class TextToSpeechScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final audioPlayer = AudioPlayer();
     return Scaffold(
-      appBar: AppBar(title: const Text("Text to speech")),
+      appBar: AppBar(title: Text(l10n.textToSpeech)),
       body: Consumer<TtsModel>(builder: (context, model, child) {
         return ListView(
           children: [
@@ -44,7 +45,7 @@ class TextToSpeechScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Languages",
+                                      l10n.ttsLanguages,
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
@@ -77,7 +78,7 @@ class TextToSpeechScreen extends StatelessWidget {
                                 ),
                               Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("Voices",
+                                child: Text(l10n.ttsVoices,
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -89,9 +90,8 @@ class TextToSpeechScreen extends StatelessWidget {
                           ),
                         ),
                         SwitchListTile.adaptive(
-                          title: const Text('Per-viewer voice'),
-                          subtitle:
-                              const Text('Identify your viewers by voice'),
+                          title: Text(l10n.ttsPerViewerVoice),
+                          subtitle: Text(l10n.ttsPerViewerVoiceSubtitle),
                           value: model.isRandomVoiceEnabled,
                           onChanged: (value) {
                             model.isRandomVoiceEnabled = value;
@@ -133,7 +133,7 @@ class TextToSpeechScreen extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     model.isRandomVoiceEnabled
-                                        ? 'Random'
+                                        ? l10n.ttsRandom
                                         : model.voice,
                                   ),
                                 ),
@@ -155,21 +155,21 @@ class TextToSpeechScreen extends StatelessWidget {
                       "voice": model.voice,
                       "rate": model.speed * 1.5 + 0.5,
                       "pitch": model.pitch * 4 - 2,
-                      "text": AppLocalizations.of(context)!.sampleMessage,
+                      "text": l10n.sampleMessage,
                     });
                     final bytes = const Base64Decoder().convert(response.data);
                     audioPlayer.setAudioSource(BytesAudioSource(bytes));
                     audioPlayer.play();
                   } else {
                     model.say(
-                        AppLocalizations.of(context)!,
+                        l10n,
                         SystemMessageModel(
-                          text: AppLocalizations.of(context)!.sampleMessage,
+                          text: l10n.sampleMessage,
                         ),
                         force: true);
                   }
                 },
-                child: const Text("Play sample message"),
+                child: Text(l10n.ttsPlaySampleMessage),
               ),
             ),
             const SizedBox(height: 8),
@@ -178,7 +178,7 @@ class TextToSpeechScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Text to Speech Rate",
+                  Text(l10n.ttsRate,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.bold,
@@ -192,7 +192,7 @@ class TextToSpeechScreen extends StatelessWidget {
                       model.speed = value;
                     },
                   ),
-                  Text("Text to Speech Pitch",
+                  Text(l10n.ttsPitch,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.bold,
@@ -222,8 +222,8 @@ class TextToSpeechScreen extends StatelessWidget {
                             child: Text.rich(
                               TextSpan(
                                 children: [
-                                  const TextSpan(
-                                      text: 'Unlock high-quality voices'),
+                                  TextSpan(
+                                      text: l10n.ttsUnlockHighQualityVoices),
                                   const WidgetSpan(child: SizedBox(width: 8)),
                                   WidgetSpan(
                                     child: Icon(
@@ -244,21 +244,21 @@ class TextToSpeechScreen extends StatelessWidget {
               ),
             ),
             SwitchListTile.adaptive(
-              title: const Text('Mute text to speech for bots'),
+              title: Text(l10n.ttsMuteBots),
               value: model.isBotMuted,
               onChanged: (value) {
                 model.isBotMuted = value;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text('Mute text to speech for replies'),
+              title: Text(l10n.ttsMuteReplies),
               value: model.isReplyMuted,
               onChanged: (value) {
                 model.isReplyMuted = value;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text('Mute all emotes in text to speech'),
+              title: Text(l10n.ttsMuteEmotes),
               value: model.isEmoteMuted,
               onChanged: (value) {
                 model.isEmoteMuted = value;
@@ -266,13 +266,14 @@ class TextToSpeechScreen extends StatelessWidget {
             ),
             ListTile(
               enabled: model.isEmoteMuted,
-              title: const Text('Allowed emotes'),
+              title: Text(l10n.ttsAllowedEmotes),
               subtitle: Text(
                 model.isEmoteMuted
                     ? (model.allowedEmotes.isEmpty
-                        ? 'Allow specific emotes (e.g. "Kappa*") to still be read aloud'
-                        : '${model.allowedEmotes.length} allowed emote${model.allowedEmotes.length == 1 ? "" : "s"}')
-                    : 'Enable "Mute all emotes" to allow exceptions',
+                        ? l10n.ttsAllowedEmotesHint
+                        : l10n.ttsAllowedEmotesCount(
+                            model.allowedEmotes.length))
+                    : l10n.ttsAllowedEmotesMuteDisabledHint,
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: model.isEmoteMuted
@@ -281,9 +282,8 @@ class TextToSpeechScreen extends StatelessWidget {
                   : null,
             ),
             ListTile(
-              title: const Text("Limit repeated emojis"),
-              subtitle: const Text(
-                  "Stop TTS from reading the same emoji or emote more than a set number of times per message"),
+              title: Text(l10n.ttsLimitRepeatedEmojis),
+              subtitle: Text(l10n.ttsLimitRepeatedEmojisSubtitle),
               trailing: DropdownButton<int>(
                 value: model.maxRepeatedEmojis,
                 onChanged: (value) {
@@ -291,33 +291,37 @@ class TextToSpeechScreen extends StatelessWidget {
                     model.maxRepeatedEmojis = value;
                   }
                 },
-                items: const [
-                  DropdownMenuItem(value: 0, child: Text("Off")),
-                  DropdownMenuItem(value: 1, child: Text("Max 1")),
-                  DropdownMenuItem(value: 2, child: Text("Max 2")),
-                  DropdownMenuItem(value: 3, child: Text("Max 3")),
-                  DropdownMenuItem(value: 5, child: Text("Max 5")),
+                items: [
+                  DropdownMenuItem(
+                      value: 0, child: Text(l10n.ttsOptionOff)),
+                  DropdownMenuItem(
+                      value: 1, child: Text(l10n.ttsMaxRepeated(1))),
+                  DropdownMenuItem(
+                      value: 2, child: Text(l10n.ttsMaxRepeated(2))),
+                  DropdownMenuItem(
+                      value: 3, child: Text(l10n.ttsMaxRepeated(3))),
+                  DropdownMenuItem(
+                      value: 5, child: Text(l10n.ttsMaxRepeated(5))),
                 ],
               ),
             ),
             SwitchListTile.adaptive(
-              title: const Text("Mute viewer names in text to speech"),
+              title: Text(l10n.ttsMuteViewerNames),
               value: model.isPreludeMuted,
               onChanged: (value) {
                 model.isPreludeMuted = value;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text("Replace underscores with spaces in viewer names"),
+              title: Text(l10n.ttsReplaceUnderscores),
               value: model.isUnderscoreReplacementEnabled,
               onChanged: (value) {
                 model.isUnderscoreReplacementEnabled = value;
               },
             ),
             ListTile(
-              title: const Text("Collapse repeated letters in names"),
-              subtitle: const Text(
-                  "Avoids reading names like \"Celyyyyy\" letter by letter"),
+              title: Text(l10n.ttsCollapseRepeatedLetters),
+              subtitle: Text(l10n.ttsCollapseRepeatedLettersSubtitle),
               trailing: DropdownButton<int>(
                 value: model.maxRepeatedCharactersInNames,
                 onChanged: (value) {
@@ -325,25 +329,27 @@ class TextToSpeechScreen extends StatelessWidget {
                     model.maxRepeatedCharactersInNames = value;
                   }
                 },
-                items: const [
-                  DropdownMenuItem(value: 0, child: Text("Off")),
-                  DropdownMenuItem(value: 1, child: Text("Keep 1 letter")),
-                  DropdownMenuItem(value: 2, child: Text("Keep 2 letters")),
+                items: [
+                  DropdownMenuItem(
+                      value: 0, child: Text(l10n.ttsOptionOff)),
+                  DropdownMenuItem(
+                      value: 1, child: Text(l10n.ttsKeepNLetters(1))),
+                  DropdownMenuItem(
+                      value: 2, child: Text(l10n.ttsKeepNLetters(2))),
                 ],
               ),
             ),
             SwitchListTile.adaptive(
-              title: const Text("Simplify messages"),
-              subtitle: const Text("Simplify punctuation, symbols, and whitespace (including muting repetitive punctuation and unsupported characters)"),
+              title: Text(l10n.ttsSimplifyMessages),
+              subtitle: Text(l10n.ttsSimplifyMessagesSubtitle),
               value: model.isTextSimplificationEnabled,
               onChanged: (value) {
                 model.isTextSimplificationEnabled = value;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text("Flood filter"),
-              subtitle: const Text(
-                  "Suppresses TTS when the same message is sent by many viewers in a short window"),
+              title: Text(l10n.ttsFloodFilter),
+              subtitle: Text(l10n.ttsFloodFilterSubtitle),
               value: model.isFloodFilterEnabled,
               onChanged: (value) {
                 model.isFloodFilterEnabled = value;
@@ -351,9 +357,8 @@ class TextToSpeechScreen extends StatelessWidget {
             ),
             ListTile(
               enabled: model.isFloodFilterEnabled,
-              title: const Text("Flood threshold"),
-              subtitle: const Text(
-                  "How many identical messages trigger suppression"),
+              title: Text(l10n.ttsFloodThreshold),
+              subtitle: Text(l10n.ttsFloodThresholdSubtitle),
               trailing: DropdownButton<int>(
                 value: model.floodFilterThreshold,
                 onChanged: model.isFloodFilterEnabled
@@ -361,19 +366,22 @@ class TextToSpeechScreen extends StatelessWidget {
                         if (value != null) model.floodFilterThreshold = value;
                       }
                     : null,
-                items: const [
-                  DropdownMenuItem(value: 3, child: Text("3 viewers")),
-                  DropdownMenuItem(value: 5, child: Text("5 viewers")),
-                  DropdownMenuItem(value: 10, child: Text("10 viewers")),
-                  DropdownMenuItem(value: 20, child: Text("20 viewers")),
+                items: [
+                  DropdownMenuItem(
+                      value: 3, child: Text(l10n.ttsNViewers(3))),
+                  DropdownMenuItem(
+                      value: 5, child: Text(l10n.ttsNViewers(5))),
+                  DropdownMenuItem(
+                      value: 10, child: Text(l10n.ttsNViewers(10))),
+                  DropdownMenuItem(
+                      value: 20, child: Text(l10n.ttsNViewers(20))),
                 ],
               ),
             ),
             ListTile(
               enabled: model.isFloodFilterEnabled,
-              title: const Text("Flood window"),
-              subtitle: const Text(
-                  "Time window in which identical messages are counted"),
+              title: Text(l10n.ttsFloodWindow),
+              subtitle: Text(l10n.ttsFloodWindowSubtitle),
               trailing: DropdownButton<int>(
                 value: model.floodFilterWindowSeconds,
                 onChanged: model.isFloodFilterEnabled
@@ -382,33 +390,35 @@ class TextToSpeechScreen extends StatelessWidget {
                           model.floodFilterWindowSeconds = value;
                       }
                     : null,
-                items: const [
-                  DropdownMenuItem(value: 5, child: Text("5 seconds")),
-                  DropdownMenuItem(value: 10, child: Text("10 seconds")),
-                  DropdownMenuItem(value: 30, child: Text("30 seconds")),
-                  DropdownMenuItem(value: 60, child: Text("60 seconds")),
+                items: [
+                  DropdownMenuItem(
+                      value: 5, child: Text(l10n.ttsNSeconds(5))),
+                  DropdownMenuItem(
+                      value: 10, child: Text(l10n.ttsNSeconds(10))),
+                  DropdownMenuItem(
+                      value: 30, child: Text(l10n.ttsNSeconds(30))),
+                  DropdownMenuItem(
+                      value: 60, child: Text(l10n.ttsNSeconds(60))),
                 ],
               ),
             ),
             SwitchListTile.adaptive(
-              title: const Text("Stream chat game mode"),
-              subtitle: const Text(
-                  "Silences single-character votes (Q/Z/S/D, H/B/G/D, 1–7) and "
-                  "three-number sequences (\"123\", \"1 2 3\") used in stream games"),
+              title: Text(l10n.ttsGameMode),
+              subtitle: Text(l10n.ttsGameModeSubtitle),
               value: model.isGameModeEnabled,
               onChanged: (value) {
                 model.isGameModeEnabled = value;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text("Subscribers only"),
+              title: Text(l10n.ttsSubscribersOnly),
               value: model.isSubscribersOnly,
               onChanged: (value) {
                 model.isSubscribersOnly = value;
               },
             ),
             SwitchListTile.adaptive(
-              title: const Text("Only say messages starting with !v"),
+              title: Text(l10n.ttsTtsCommandOnly),
               value: model.isTtsCommandEncouraged,
               onChanged: (value) {
                 model.isTtsCommandEncouraged = value;

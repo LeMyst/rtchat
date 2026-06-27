@@ -723,4 +723,153 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get unmute => 'Unmute';
+
+  @override
+  String get ttsPlaySampleMessage => 'Play sample message';
+
+  @override
+  String get ttsRate => 'Text to Speech Rate';
+
+  @override
+  String get ttsPitch => 'Text to Speech Pitch';
+
+  @override
+  String get ttsMuteBots => 'Mute text to speech for bots';
+
+  @override
+  String get ttsMuteReplies => 'Mute text to speech for replies';
+
+  @override
+  String get ttsMuteEmotes => 'Mute all emotes in text to speech';
+
+  @override
+  String get ttsAllowedEmotes => 'Allowed emotes';
+
+  @override
+  String get ttsAllowedEmotesHint =>
+      'Allow specific emotes (e.g. \"Kappa*\") to still be read aloud';
+
+  @override
+  String ttsAllowedEmotesCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count allowed emotes',
+      one: '1 allowed emote',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ttsAllowedEmotesMuteDisabledHint =>
+      'Enable \"Mute all emotes\" to allow exceptions';
+
+  @override
+  String get ttsLimitRepeatedEmojis => 'Limit repeated emojis';
+
+  @override
+  String get ttsLimitRepeatedEmojisSubtitle =>
+      'Stop TTS from reading the same emoji or emote more than a set number of times per message';
+
+  @override
+  String get ttsOptionOff => 'Off';
+
+  @override
+  String ttsMaxRepeated(int count) {
+    return 'Max $count';
+  }
+
+  @override
+  String get ttsMuteViewerNames => 'Mute viewer names in text to speech';
+
+  @override
+  String get ttsReplaceUnderscores =>
+      'Replace underscores with spaces in viewer names';
+
+  @override
+  String get ttsCollapseRepeatedLetters => 'Collapse repeated letters in names';
+
+  @override
+  String get ttsCollapseRepeatedLettersSubtitle =>
+      'Avoids reading names like \"Celyyyyy\" letter by letter';
+
+  @override
+  String ttsKeepNLetters(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Keep $count letters',
+      one: 'Keep 1 letter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ttsSimplifyMessages => 'Simplify messages';
+
+  @override
+  String get ttsSimplifyMessagesSubtitle =>
+      'Simplify punctuation, symbols, and whitespace (including muting repetitive punctuation and unsupported characters)';
+
+  @override
+  String get ttsFloodFilter => 'Flood filter';
+
+  @override
+  String get ttsFloodFilterSubtitle =>
+      'Suppresses TTS when the same message is sent by many viewers in a short window';
+
+  @override
+  String get ttsFloodThreshold => 'Flood threshold';
+
+  @override
+  String get ttsFloodThresholdSubtitle =>
+      'How many identical messages trigger suppression';
+
+  @override
+  String ttsNViewers(int count) {
+    return '$count viewers';
+  }
+
+  @override
+  String get ttsFloodWindow => 'Flood window';
+
+  @override
+  String get ttsFloodWindowSubtitle =>
+      'Time window in which identical messages are counted';
+
+  @override
+  String ttsNSeconds(int count) {
+    return '$count seconds';
+  }
+
+  @override
+  String get ttsGameMode => 'Stream chat game mode';
+
+  @override
+  String get ttsGameModeSubtitle =>
+      'Silences single-character votes (Q/Z/S/D, H/B/G/D, 1–7) and three-number sequences (\"123\", \"1 2 3\") used in stream games';
+
+  @override
+  String get ttsSubscribersOnly => 'Subscribers only';
+
+  @override
+  String get ttsTtsCommandOnly => 'Only say messages starting with !v';
+
+  @override
+  String get ttsLanguages => 'Languages';
+
+  @override
+  String get ttsVoices => 'Voices';
+
+  @override
+  String get ttsPerViewerVoice => 'Per-viewer voice';
+
+  @override
+  String get ttsPerViewerVoiceSubtitle => 'Identify your viewers by voice';
+
+  @override
+  String get ttsRandom => 'Random';
+
+  @override
+  String get ttsUnlockHighQualityVoices => 'Unlock high-quality voices';
 }
