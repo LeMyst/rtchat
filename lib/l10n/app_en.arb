@@ -1189,5 +1189,63 @@
   "ttsUnlockHighQualityVoices": "Unlock high-quality voices",
   "@ttsUnlockHighQualityVoices": {
     "description": "Button label to unlock high-quality TTS voices (debug)"
+  },
+  "ttsAllowedEmotesScreenTitle": "Allowed emotes",
+  "@ttsAllowedEmotesScreenTitle": {
+    "description": "Title for the allowed emotes settings screen"
+  },
+  "ttsAllowedEmotesDescription": "When all emotes are muted, emotes matching these patterns are still read aloud. Use * to match any text and ? to match a single character (e.g. \"Kappa*\"). Optionally provide a replacement to simplify what is spoken.",
+  "@ttsAllowedEmotesDescription": {
+    "description": "Explanatory text at the top of the allowed emotes screen"
+  },
+  "ttsNoAllowedEmotes": "No allowed emotes",
+  "@ttsNoAllowedEmotes": {
+    "description": "Empty state label when the allowed emotes list is empty"
+  },
+  "ttsAllowedEmoteSpokenAs": "Spoken as \"{replacement}\"",
+  "@ttsAllowedEmoteSpokenAs": {
+    "description": "Subtitle for an allowed emote entry that has a replacement",
+    "placeholders": {
+      "replacement": {
+        "type": "String",
+        "example": "Kappa"
+      }
+    }
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "Tooltip for a remove/delete icon button"
+  },
+  "ttsAddEmote": "Add emote",
+  "@ttsAddEmote": {
+    "description": "Title for the dialog that adds a new allowed emote"
+  },
+  "ttsEditEmote": "Edit emote",
+  "@ttsEditEmote": {
+    "description": "Title for the dialog that edits an existing allowed emote"
+  },
+  "ttsEmotePattern": "Pattern",
+  "@ttsEmotePattern": {
+    "description": "Label for the emote pattern text field"
+  },
+  "ttsEmotePatternHint": "e.g. Kappa*",
+  "@ttsEmotePatternHint": {
+    "description": "Hint text for the emote pattern text field"
+  },
+  "ttsEmotePatternRequired": "Enter an emote pattern",
+  "@ttsEmotePatternRequired": {
+    "description": "Validation error shown when the emote pattern field is empty"
+  },
+  "ttsEmoteReplacement": "Replacement (optional)",
+  "@ttsEmoteReplacement": {
+    "description": "Label for the optional emote replacement text field"
+  },
+  "ttsEmoteReplacementHint": "e.g. Kappa",
+  "@ttsEmoteReplacementHint": {
+    "description": "Hint text for the emote replacement text field"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Button label to save changes in a dialog"
   }
 }

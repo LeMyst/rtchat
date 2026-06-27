@@ -882,4 +882,46 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ttsUnlockHighQualityVoices => 'Débloquer les voix haute qualité';
+
+  @override
+  String get ttsAllowedEmotesScreenTitle => 'Émoticônes autorisés';
+
+  @override
+  String get ttsAllowedEmotesDescription =>
+      'Lorsque tous les émoticônes sont muets, ceux correspondant à ces modèles sont quand même lus à voix haute. Utilisez * pour correspondre à n\'importe quel texte et ? pour correspondre à un seul caractère (ex. \"Kappa*\"). Vous pouvez fournir un remplacement pour simplifier ce qui est dit.';
+
+  @override
+  String get ttsNoAllowedEmotes => 'Aucun émoticône autorisé';
+
+  @override
+  String ttsAllowedEmoteSpokenAs(String replacement) {
+    return 'Lu comme \"$replacement\"';
+  }
+
+  @override
+  String get remove => 'Supprimer';
+
+  @override
+  String get ttsAddEmote => 'Ajouter un émoticône';
+
+  @override
+  String get ttsEditEmote => 'Modifier l\'émoticône';
+
+  @override
+  String get ttsEmotePattern => 'Modèle';
+
+  @override
+  String get ttsEmotePatternHint => 'ex. Kappa*';
+
+  @override
+  String get ttsEmotePatternRequired => 'Saisissez un modèle d\'émoticône';
+
+  @override
+  String get ttsEmoteReplacement => 'Remplacement (facultatif)';
+
+  @override
+  String get ttsEmoteReplacementHint => 'ex. Kappa';
+
+  @override
+  String get save => 'Enregistrer';
 }

@@ -206,5 +206,18 @@
   "ttsPerViewerVoice": "Voix par spectateur",
   "ttsPerViewerVoiceSubtitle": "Identifiez vos spectateurs par leur voix",
   "ttsRandom": "Aléatoire",
-  "ttsUnlockHighQualityVoices": "Débloquer les voix haute qualité"
+  "ttsUnlockHighQualityVoices": "Débloquer les voix haute qualité",
+  "ttsAllowedEmotesScreenTitle": "Émoticônes autorisés",
+  "ttsAllowedEmotesDescription": "Lorsque tous les émoticônes sont muets, ceux correspondant à ces modèles sont quand même lus à voix haute. Utilisez * pour correspondre à n'importe quel texte et ? pour correspondre à un seul caractère (ex. \"Kappa*\"). Vous pouvez fournir un remplacement pour simplifier ce qui est dit.",
+  "ttsNoAllowedEmotes": "Aucun émoticône autorisé",
+  "ttsAllowedEmoteSpokenAs": "Lu comme \"{replacement}\"",
+  "remove": "Supprimer",
+  "ttsAddEmote": "Ajouter un émoticône",
+  "ttsEditEmote": "Modifier l'émoticône",
+  "ttsEmotePattern": "Modèle",
+  "ttsEmotePatternHint": "ex. Kappa*",
+  "ttsEmotePatternRequired": "Saisissez un modèle d'émoticône",
+  "ttsEmoteReplacement": "Remplacement (facultatif)",
+  "ttsEmoteReplacementHint": "ex. Kappa",
+  "save": "Enregistrer"
 }
